@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3c3b18e2e4e5c154aa60010361b2ca5a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 271239
+  packageName: 'Unity Learn | 2D Beginner: Adventure Game Complete Project | URP'
+  packageVersion: 1.2
+  assetPath: Assets/UnityTechnologies/Final/Settings/UniversalRenderPipelineAsset2D.asset
+  uploadId: 781392
