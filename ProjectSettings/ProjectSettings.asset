@@ -832,11 +832,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: f0e5ff72-e782-4636-adb0-302925984bc0
+  cloudProjectId: 59ea9837-40d1-4f37-8668-20ab358aaf10
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: TheDawnOfTheDevs
-  organizationId: dawn-of-the-devs
+  projectName: TheDawnOfTheDevs 2025-10-05_01-33-40
+  organizationId: frysonk112115
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 1
   hmiLoadingImage: {fileID: 0}
