@@ -7,6 +7,9 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] float BaseSpeed = 5f;
     private float MovementSpeed;
 
+    [SerializeField] float Health = 100f;
+    [SerializeField] float MaxHealth = 100f;
+
     [SerializeField] Animator Animator;
     [SerializeField] SpriteRenderer SpriteRenderer;
     private Vector2 m_moveInput;
@@ -61,6 +64,8 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (movement.x > 0) SpriteRenderer.flipX = false;
         else if (movement.x < 0) SpriteRenderer.flipX = true;
+
+
     }
 
     private void Update()
@@ -81,7 +86,27 @@ public class PlayerInputHandler : MonoBehaviour
         // Rotate firePoint to face mouse direction
         float angle = Mathf.Atan2(dirToMouse.y, dirToMouse.x) * Mathf.Rad2Deg;
         firePoint.rotation = Quaternion.Euler(0, 0, angle);
+
+        if (Health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
+    // Health change logic
+    public void ChangeHealth(float amount)
+    {
+        Health = Mathf.Clamp(Health + amount, 0, MaxHealth);
+
+
+        // Optionally handle death
+        if (Health <= 0)
+        {
+            // You can add respawn or death logic here
+            Destroy(gameObject);
+        }
+    }
+
+
 
     private void Shoot()
     {

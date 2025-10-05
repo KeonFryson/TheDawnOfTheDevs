@@ -4,6 +4,7 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField] float speed = 50f;
     [SerializeField] float lifetime = 1f;
+    [SerializeField] int damage = 1;
     private Vector2 direction = Vector2.right;
     private Rigidbody2D rb;
 
@@ -27,6 +28,11 @@ public class Bullet : MonoBehaviour
     {
         if (collision.GetComponent<Bullet>() != null)
             return;
+        Blue_Enemy blueEnemy = collision.GetComponent<Blue_Enemy>();
+        if (blueEnemy != null)
+        {
+            blueEnemy.TakeDamage(damage);
+        }
         // Add damage logic here if needed
         Destroy(gameObject);
     }
@@ -34,7 +40,11 @@ public class Bullet : MonoBehaviour
     {
         if (collision.collider.GetComponent<Bullet>() != null)
             return;
-
+        Blue_Enemy blueEnemy = collision.collider.GetComponent<Blue_Enemy>();
+        if (blueEnemy != null)
+        {
+            blueEnemy.TakeDamage(damage);
+        }
         // Add damage logic here if needed
         Destroy(gameObject);
     }
