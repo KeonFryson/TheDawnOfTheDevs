@@ -625,6 +625,7 @@ MonoBehaviour:
   baseEnemiesPerWave: 5
   difficultyMultiplier: 1.25
   powerUpUI: {fileID: 1788018434}
+  enemySpawnRadius: 5
 --- !u!4 &1341123358
 Transform:
   m_ObjectHideFlags: 0
@@ -1189,6 +1190,16 @@ PrefabInstance:
         type: 3}
       propertyPath: orthographic size
       value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 7835450994513698115, guid: 5d3fc2a61681947458099e6d2e0d7031,
+        type: 3}
+      propertyPath: Health
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7835450994513698115, guid: 5d3fc2a61681947458099e6d2e0d7031,
+        type: 3}
+      propertyPath: MaxHealth
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -18,7 +18,7 @@ public class WaveManager : MonoBehaviour
     private int currentWave = 0;
     private int enemiesAlive = 0;
     private bool waveActive = false;
-
+    public float enemySpawnRadius = 5f;
     private void Start()
     {
         StartWave();
@@ -44,9 +44,15 @@ public class WaveManager : MonoBehaviour
         for (int i = 0; i < enemyCount; i++)
         {
             var prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
-            // Use shuffled spawn points, cycle if more enemies than spawn points
             var spawn = shuffledSpawns[i % shuffledSpawns.Count];
-            var enemy = Instantiate(prefab, spawn.position, Quaternion.identity);
+
+            // Calculate position in a circle around the spawn point
+            float angle = (360f / enemyCount) * i;
+            float rad = angle * Mathf.Deg2Rad;
+            Vector3 offset = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0) * enemySpawnRadius;
+            Vector3 spawnPos = spawn.position + offset;
+
+            var enemy = Instantiate(prefab, spawnPos, Quaternion.identity);
 
             if (enemy.TryGetComponent(out Blue_Enemy enemyScript))
             {

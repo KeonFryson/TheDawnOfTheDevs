@@ -19,6 +19,16 @@ public class Blue_Enemy : MonoBehaviour
 
     private bool isDead = false;
 
+    public float attackRange = 1.5f;
+    public float attackCooldown = 1f;
+    private float attackTimer = 0f;
+
+    public float separationRadius = 1.0f; // Minimum space between enemies
+    public float separationStrength = 1.5f; // How strongly to push away
+
+    [Header("Attack Area")]
+    public Transform attackTriangle;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -27,26 +37,67 @@ public class Blue_Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position + moveDir * speed * Time.fixedDeltaTime);
+        if (isDead) return;
+        var player = FindFirstObjectByType<PlayerInputHandler>();
+        if (player != null)
+        {
+            Vector2 dirToPlayer = ((Vector2)player.transform.position - rb.position).normalized;
+            float distance = Vector2.Distance(rb.position, player.transform.position);
+
+            // Separation from other enemies
+            Vector2 separation = CalculateSeparation();
+
+            // Combine movement: toward player + separation
+            Vector2 move = dirToPlayer + separation * separationStrength;
+
+            // Move toward player if outside attack range
+            if (distance > attackRange)
+            {
+                rb.MovePosition(rb.position + move.normalized * speed * Time.fixedDeltaTime);
+            }
+
+            // Position and rotate the triangle in front of the enemy
+            if (attackTriangle != null)
+            {
+                float triangleOffset = 0.5f;
+                attackTriangle.localPosition = dirToPlayer * triangleOffset;
+                float angle = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg;
+                attackTriangle.localRotation = Quaternion.Euler(0, 0, angle - 90);
+            }
+        }
+    }
+
+    private Vector2 CalculateSeparation()
+    {
+        Vector2 separation = Vector2.zero;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(rb.position, separationRadius, LayerMask.GetMask("Enemy"));
+        foreach (var hit in hits)
+        {
+            if (hit.gameObject != this.gameObject)
+            {
+                Vector2 away = (rb.position - (Vector2)hit.transform.position);
+                float dist = away.magnitude;
+                if (dist > 0)
+                    separation += away / dist; // Weighted by distance
+            }
+        }
+        return separation;
     }
 
     private void Update()
     {
-        timer -= Time.deltaTime;
-        if (timer <= 0f)
-        {
-            moveDir *= -1;
-            timer = changeDirTimer;
-        }
+        if (isDead) return;
+        attackTimer -= Time.deltaTime;
+      
+    }
+    public void TryAttackPlayer(PlayerInputHandler player)
+    {
+        if (attackTimer > 0f) return;
+        player.ChangeHealth(-10f);
+        attackTimer = attackCooldown;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.collider.TryGetComponent<PlayerInputHandler>(out var player))
-        {
-            player.ChangeHealth(-10f);
-        }
-    }
+   
 
     public void TakeDamage(float amount)
     {
