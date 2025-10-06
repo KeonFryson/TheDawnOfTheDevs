@@ -10,6 +10,13 @@ public class PlayerController : MonoBehaviour
     public InputAction MoveAction;
     void Start()
     {
+
+
+        //Frame Rate Controls
+        //QualitySettings.vSyncCount = 0;
+        //Application.targetFrameRate = 10;
+        
+        
         //LeftAction.Enable(); 
         MoveAction.Enable();
     }
@@ -20,7 +27,7 @@ public class PlayerController : MonoBehaviour
   
         Vector2 move = MoveAction.ReadValue<Vector2>();
         Debug.Log(move);
-        Vector2 position = (Vector2)transform.position + move * 0.01f;
+        Vector2 position = (Vector2)transform.position + move * 3.0f *Time.deltaTime;
         transform.position = position;
      
     }
