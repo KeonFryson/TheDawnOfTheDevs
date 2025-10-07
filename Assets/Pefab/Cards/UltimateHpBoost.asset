@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce41cd6070cb35043b8ed51fdc08ce9f, type: 3}
+  m_Name: UltimateHpBoost
+  m_EditorClassIdentifier: Assembly-CSharp::MaxHealthBoost
+  powerUpName: Ultimate HP Boost
+  description: Add 100 to Max HP
+  icon: {fileID: 21300000, guid: 806c2f4e4121bd443a535f7551d4fa7c, type: 3}
+  tier: 3
+  maxHealthIncrease: 100

@@ -1,4 +1,4 @@
-using System.ComponentModel;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,35 +17,24 @@ public class PlayerInputHandler : MonoBehaviour
 
     private Rigidbody2D rb;
 
-    // Weapon system
-    private enum WeaponType { Pistol, Shotgun }
-    private WeaponType currentWeapon = WeaponType.Pistol;
-
-    [Header("Weapon Prefabs")]
-    [SerializeField] GameObject pistolBulletPrefab;
-    [SerializeField] GameObject shotgunBulletPrefab;
-    [SerializeField] Transform firePoint;
+    [Header("Weapon Handler")]
+    [SerializeField] private PlayerWeaponHandler weaponHandler;
 
     private void Awake()
     {
-
         m_controls = new InputSystem_Actions();
         rb = GetComponent<Rigidbody2D>();
-
-        // Freeze rotation so player doesn't spin on collision
         rb.freezeRotation = true;
 
-        //Movement
         m_controls.Player.Move.performed += ctx => m_moveInput = ctx.ReadValue<Vector2>();
         m_controls.Player.Move.canceled += ctx => m_moveInput = Vector2.zero;
 
-        // Shooting
-        m_controls.Player.Attack.performed += ctx => Shoot();
+        m_controls.Player.Attack.performed += ctx => weaponHandler.OnAttackPressed(transform.position);
+        m_controls.Player.Attack.canceled += ctx => weaponHandler.OnAttackReleased();
 
-        // Weapon switching
-        m_controls.Player.SwitchWeapon.performed += ctx => SwitchWeapon();
-
+        m_controls.Player.SwitchWeapon.performed += ctx => weaponHandler.SwitchWeapon();
     }
+
     private void OnEnable()
     {
         m_controls.Enable();
@@ -64,80 +53,54 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (movement.x > 0) SpriteRenderer.flipX = false;
         else if (movement.x < 0) SpriteRenderer.flipX = true;
-
-
     }
 
     private void Update()
     {
-
-        // --- FirePoint rotation and position ---
-        // Get mouse position in world space
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        mouseWorldPos.z = transform.position.z; // Keep player z for 2D
+        mouseWorldPos.z = transform.position.z;
 
-        // Direction from player to mouse
         Vector3 dirToMouse = (mouseWorldPos - transform.position).normalized;
-
-        // Set firePoint at fixed radius from player (e.g., 0.7 units)
         float firePointRadius = 7f;
-        firePoint.position = transform.position + dirToMouse * firePointRadius;
-
-        // Rotate firePoint to face mouse direction
+        weaponHandler.FirePoint.position = transform.position + dirToMouse * firePointRadius;
         float angle = Mathf.Atan2(dirToMouse.y, dirToMouse.x) * Mathf.Rad2Deg;
-        firePoint.rotation = Quaternion.Euler(0, 0, angle);
+        weaponHandler.FirePoint.rotation = Quaternion.Euler(0, 0, angle);
+
+        weaponHandler.UpdateLaserVisual(transform.position);
 
         if (Health <= 0)
         {
             Destroy(gameObject);
         }
     }
-    // Health change logic
+
     public void ChangeHealth(float amount)
     {
         Health = Mathf.Clamp(Health + amount, 0, MaxHealth);
-
-
-        // Optionally handle death
         if (Health <= 0)
         {
-            // You can add respawn or death logic here
             Destroy(gameObject);
         }
     }
 
-
-
-    private void Shoot()
+    public void ChangeMaxHealth(float amount)
     {
-        // Direction from player to mouse
-        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        mouseWorldPos.z = transform.position.z;
-        Vector2 shootDir = (mouseWorldPos - transform.position).normalized;
-
-        switch (currentWeapon)
+        MaxHealth += amount;
+        MaxHealth = Mathf.Max(MaxHealth, 100f);
+        Health = Mathf.Clamp(Health, 0, MaxHealth);
+        if (Health <= 0)
         {
-            case WeaponType.Pistol:
-                var pistolBullet = Instantiate(pistolBulletPrefab, firePoint.position, Quaternion.identity);
-                pistolBullet.GetComponent<Bullet>().SetDirection(shootDir);
-                break;
-            case WeaponType.Shotgun:
-                float spreadAngle = 15f;
-                int pelletCount = 5;
-                for (int i = 0; i < pelletCount; i++)
-                {
-                    float angle = -spreadAngle * 0.5f + spreadAngle * i / (pelletCount - 1);
-                    Vector2 dir = Quaternion.Euler(0, 0, angle) * shootDir;
-                    var shotgunBullet = Instantiate(shotgunBulletPrefab, firePoint.position, Quaternion.identity);
-                    shotgunBullet.GetComponent<Bullet>().SetDirection(dir);
-                }
-                break;
+            Destroy(gameObject);
         }
     }
 
-    private void SwitchWeapon()
+    public void IncreaseDamage(int amount)
     {
-        currentWeapon = currentWeapon == WeaponType.Pistol ? WeaponType.Shotgun : WeaponType.Pistol;
-        // Optionally, update UI or play sound here
+        weaponHandler.IncreaseDamage(amount);
+    }
+
+    public int GetCurrentDamage()
+    {
+        return weaponHandler.GetCurrentDamage();
     }
 }
