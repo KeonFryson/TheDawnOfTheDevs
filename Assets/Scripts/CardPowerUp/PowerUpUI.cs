@@ -1,6 +1,7 @@
 // ============================
 // PowerUpUI.cs
 // ============================
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,18 @@ public class PowerUpUI : MonoBehaviour
     public Transform cardParent;
 
     private PlayerInputHandler player;
+
+    private float cardInputBlockTime = 1f; // seconds
+    private float cardInputBlockUntil = 0f;
+    private bool showingWeaponReplaceDialog = false;
+
+    private readonly Dictionary<PowerUpTier, float> tierWeights = new()
+    {
+        { PowerUpTier.Minor, 0.7f },
+        { PowerUpTier.Major, 0.25f },
+        { PowerUpTier.Ultimate, 0.05f }
+    };
+
 
     private void Awake()
     {
@@ -34,6 +47,8 @@ public class PowerUpUI : MonoBehaviour
 
     public void ShowCards()
     {
+        Debug.Log("ShowCards called.");
+
         if (availablePowerUps == null || availablePowerUps.Length == 0)
         {
             Debug.LogWarning("No power-ups assigned!");
@@ -41,26 +56,66 @@ public class PowerUpUI : MonoBehaviour
             return;
         }
 
+        Debug.Log("Activating PowerUp UI.");
         gameObject.SetActive(true);
 
         int cardCount = Mathf.Min(3, availablePowerUps.Length);
-        List<int> chosen = new();
+        Debug.Log($"Calculated cardCount: {cardCount}");
 
-        while (chosen.Count < cardCount)
+        List<PowerUp> chosen = new();
+
+        // Weighted random selection
+        // Weighted random selection (allow duplicates)
+        for (int i = 0; i < cardCount; i++)
         {
-            int idx = Random.Range(0, availablePowerUps.Length);
-            if (!chosen.Contains(idx)) chosen.Add(idx);
+            var selected = GetWeightedRandomPowerUp();
+            Debug.Log(selected != null
+                ? $"Selected power-up: {selected.powerUpName} (Tier: {selected.tier})"
+                : "Selected power-up: null");
+
+            if (selected != null)
+                chosen.Add(selected);
         }
+
+        Debug.Log($"Total chosen power-ups: {chosen.Count}");
 
         foreach (Transform child in cardParent)
-            Destroy(child.gameObject);
-
-        foreach (int idx in chosen)
         {
+            Debug.Log($"Destroying card: {child.gameObject.name}");
+            Destroy(child.gameObject);
+        }
+
+        foreach (var powerUp in chosen)
+        {
+            Debug.Log($"Instantiating card for power-up: {powerUp.powerUpName}");
             var cardObj = Instantiate(cardPrefab, cardParent);
             var card = cardObj.GetComponent<PowerUpCard>();
-            card.Setup(availablePowerUps[idx], OnCardSelected);
+            card.Setup(powerUp, OnCardSelected);
         }
+        // Block input for a short time to prevent accidental selection
+        cardInputBlockUntil = Time.unscaledTime + cardInputBlockTime;
+
+        Debug.Log("ShowCards finished.");
+    }
+
+    private PowerUp GetWeightedRandomPowerUp()
+    {
+        // Group power-ups by tier
+        var grouped = availablePowerUps.GroupBy(p => p.tier).ToDictionary(g => g.Key, g => g.ToList());
+
+        // Build weighted list
+        List<PowerUp> weightedList = new();
+        foreach (var kvp in grouped)
+        {
+            int count = Mathf.CeilToInt(kvp.Value.Count * tierWeights[kvp.Key] * 100);
+            for (int i = 0; i < count; i++)
+                weightedList.Add(kvp.Value[Random.Range(0, kvp.Value.Count)]);
+        }
+
+        if (weightedList.Count == 0)
+            return availablePowerUps[Random.Range(0, availablePowerUps.Length)];
+
+        return weightedList[Random.Range(0, weightedList.Count)];
     }
 
     private void OnCardSelected(PowerUp powerUp)
@@ -72,6 +127,11 @@ public class PowerUpUI : MonoBehaviour
 
     private IEnumerator HideAndContinue()
     {
+        if (showingWeaponReplaceDialog)
+        {
+            yield break;
+        }
+
         HideCards();
         yield return new WaitForSeconds(0.5f);
         Debug.Log("Starting next wave...");
@@ -99,4 +159,53 @@ public class PowerUpUI : MonoBehaviour
         yield return null;
         gameObject.SetActive(false);
     }
+
+    // Input block check for PowerUpCard
+    public bool CanSelectCard()
+    {
+        return Time.unscaledTime >= cardInputBlockUntil;
+    }
+
+    // Weapon replacement dialog
+    public void ShowWeaponReplaceDialog(PlayerWeaponHandler handler, PlayerWeaponHandler.WeaponType newWeapon)
+    {
+        showingWeaponReplaceDialog = true;
+        Debug.Log($"ShowWeaponReplaceDialog called. New weapon: {newWeapon}");
+
+        // Destroy any existing cards
+        foreach (Transform child in cardParent)
+        {
+            Debug.Log($"Destroying card: {child.gameObject.name}");
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < handler.weaponSlots.Count; i++)
+        {
+            var weaponType = handler.weaponSlots[i];
+            int slotIndex = i; // Capture for closure
+
+            var cardObj = Instantiate(cardPrefab, cardParent);
+            var card = cardObj.GetComponent<PowerUpCard>();
+            card.SetupForWeaponReplace(weaponType, () =>
+            {
+                Debug.Log($"Replacing weapon in slot {slotIndex}: {weaponType} -> {newWeapon}");
+                if (slotIndex >= 0 && slotIndex < handler.weaponSlots.Count)
+                {
+                    handler.weaponSlots[slotIndex] = newWeapon;
+                }
+                else
+                {
+                    Debug.LogError($"Invalid slotIndex {slotIndex} for weaponSlots.Count={handler.weaponSlots.Count}");
+                }
+                showingWeaponReplaceDialog = false;
+                StartCoroutine(HideAndContinue());
+            });
+        }
+
+        // Block input for a short time to prevent accidental selection
+        cardInputBlockUntil = Time.unscaledTime + cardInputBlockTime;
+
+        Debug.Log("ShowWeaponReplaceDialog finished.");
+    }
+
 }

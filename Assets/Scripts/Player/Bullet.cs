@@ -4,10 +4,14 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField] float speed = 50f;
     [SerializeField] float lifetime = 1f;
-    [SerializeField] int damage = 1;
+    [SerializeField] int damage;
     private Vector2 direction = Vector2.right;
     private Rigidbody2D rb;
 
+    public void SetDamage(int value)
+    {
+        damage = value;
+    }
     public void SetDirection(Vector2 dir)
     {
         direction = dir.normalized;
@@ -28,6 +32,11 @@ public class Bullet : MonoBehaviour
     {
         if (collision.GetComponent<Bullet>() != null)
             return;
+        // Ignore AttackTriangle by layer
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ignore Raycast"))
+            return;
+
+
         Blue_Enemy blueEnemy = collision.GetComponent<Blue_Enemy>();
         if (blueEnemy != null)
         {
@@ -39,6 +48,9 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.GetComponent<Bullet>() != null)
+            return;
+        // Ignore AttackTriangle by layer
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ignore Raycast"))
             return;
         Blue_Enemy blueEnemy = collision.collider.GetComponent<Blue_Enemy>();
         if (blueEnemy != null)

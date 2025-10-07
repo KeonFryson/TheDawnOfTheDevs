@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e342f48f24d0e3f4f91ffedbc4d46f10, type: 3}
-  m_Name: Ultimate
+  m_Name: UltimateHeal
   m_EditorClassIdentifier: Assembly-CSharp::IncreaseHealthPowerUp
   powerUpName: Minor Health
   description: Increase Heatlth by 100
   icon: {fileID: 21300000, guid: 89a7c2b9294dbaa4985085575713504f, type: 3}
+  tier: 3
   healthIncrease: 100

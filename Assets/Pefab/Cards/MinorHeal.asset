@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e342f48f24d0e3f4f91ffedbc4d46f10, type: 3}
-  m_Name: Minor
+  m_Name: MinorHeal
   m_EditorClassIdentifier: Assembly-CSharp::IncreaseHealthPowerUp
   powerUpName: Minor Health
   description: Increase Heatlth by 10

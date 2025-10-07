@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb0a58f0c3e64d4c80805b6da542b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Blue_Enemy
-  speed: 50
+  speed: 30
   health: 20
   attackRange: 9
   attackCooldown: 1
@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 5898509162959555678}
   - component: {fileID: 3281446752357741194}
   - component: {fileID: 5133941867068737929}
-  m_Layer: 3
+  m_Layer: 2
   m_Name: Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
