@@ -17,3 +17,5 @@ MonoBehaviour:
   icon: {fileID: 21300042, guid: 5acb27b603af6d44ea6113c4b7b15385, type: 3}
   tier: 3
   weaponType: 2
+  weaponPrefab: {fileID: 433510427334774712, guid: 39e6e4c2cbdcde649b502c3a094d0b17,
+    type: 3}

@@ -60,11 +60,27 @@ public class PlayerInputHandler : MonoBehaviour
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         mouseWorldPos.z = transform.position.z;
 
-        Vector3 dirToMouse = (mouseWorldPos - transform.position).normalized;
-        float firePointRadius = 7f;
-        weaponHandler.FirePoint.position = transform.position + dirToMouse * firePointRadius;
-        float angle = Mathf.Atan2(dirToMouse.y, dirToMouse.x) * Mathf.Rad2Deg;
-        weaponHandler.FirePoint.rotation = Quaternion.Euler(0, 0, angle);
+        if (weaponHandler.WeaponHolder != null)
+        {
+            Vector3 dirToMouse = (mouseWorldPos - transform.position).normalized;
+            float orbitRadius = 7.0f;
+            weaponHandler.WeaponHolder.position = transform.position + dirToMouse * orbitRadius;
+
+            float angle = Mathf.Atan2(dirToMouse.y, dirToMouse.x) * Mathf.Rad2Deg;
+
+            int Scale = 3;
+            // Flip weapon Y scale when aiming left
+            if (weaponHandler.WeaponHolder.childCount > 0)
+            {
+                Transform weapon = weaponHandler.WeaponHolder.GetChild(0);
+                if (dirToMouse.x < 0)
+                    weapon.localScale = new Vector3(Scale, Scale, Scale);
+                else
+                    weapon.localScale = new Vector3(Scale, -Scale, Scale);
+            }
+
+            weaponHandler.WeaponHolder.rotation = Quaternion.Euler(0, 0, angle - 180);
+        }
 
         weaponHandler.UpdateLaserVisual(transform.position);
 

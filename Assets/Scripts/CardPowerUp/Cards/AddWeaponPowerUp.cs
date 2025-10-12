@@ -6,20 +6,21 @@ public class AddWeaponPowerUp : PowerUp
     [Header("Weapon To Add")]
     public PlayerWeaponHandler.WeaponType weaponType;
 
+    public GameObject weaponPrefab;
     public override void Apply(PlayerInputHandler player)
     {
         var handler = player.GetComponent<PlayerWeaponHandler>();
         if (handler == null) return;
 
         // Try to add weapon, returns true if added, false if already 2 weapons
-        if (!handler.AddWeaponToSlots(weaponType))
+        if (!handler.AddWeaponToSlots(weaponType, weaponPrefab))
         {
             // Already have 2 weapons, prompt to remove one
             var ui = FindFirstObjectByType<PowerUpUI>();
             if (ui != null)
             {
                 Debug.Log($"[AddWeaponPowerUp] Prompting weapon replace dialog for: {weaponType}");
-                ui.ShowWeaponReplaceDialog(handler, weaponType);
+                ui.ShowWeaponReplaceDialog(handler, weaponType, weaponPrefab);
             }
             else
             {

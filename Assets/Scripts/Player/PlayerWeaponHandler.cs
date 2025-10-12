@@ -9,8 +9,11 @@ public class PlayerWeaponHandler : MonoBehaviour
     [Header("Weapon Prefabs")]
     [SerializeField] GameObject pistolBulletPrefab;
     [SerializeField] GameObject shotgunBulletPrefab;
-    [SerializeField] Transform firePoint;
-    public Transform FirePoint => firePoint;
+    //[SerializeField] Transform firePoint;
+    //public Transform FirePoint => firePoint;
+
+    [Header("Held Weapon Prefab")]
+    [SerializeField] GameObject startingWeaponPrefab;
 
     [SerializeField] private int baseDamage = 1;
     private int currentDamage;
@@ -18,6 +21,12 @@ public class PlayerWeaponHandler : MonoBehaviour
     public List<WeaponType> weaponSlots = new List<WeaponType> { WeaponType.Pistol };
     private int currentWeaponSlot = 0;
 
+    // NEW: Store weapon prefab references for each slot
+    private List<GameObject> weaponPrefabSlots = new List<GameObject>();
+    private GameObject currentHeldWeaponInstance;
+    [SerializeField] private Transform weaponHolder;
+    [SerializeField] private GameObject muzzleFlashPrefab;
+    public Transform WeaponHolder => weaponHolder;
     [Header("Laser Settings")]
     [SerializeField] private float laserFireRate = 0.1f;
     [SerializeField] private float laserRange = 100f;
@@ -25,9 +34,12 @@ public class PlayerWeaponHandler : MonoBehaviour
     private Coroutine laserCoroutine;
     private bool isLaserActive = false;
 
+    private Transform weaponFirePoint;
     private void Awake()
     {
         currentDamage = baseDamage;
+        // Ensure weaponPrefabSlots matches weaponSlots count
+        weaponPrefabSlots.Add(startingWeaponPrefab); // <-- Use the assigned prefab for the first weapon
         if (laserLineRenderer != null)
         {
             laserLineRenderer.startWidth = 2f;
@@ -35,17 +47,19 @@ public class PlayerWeaponHandler : MonoBehaviour
             Gradient gradient = new Gradient();
             gradient.SetKeys(
                 new GradientColorKey[] {
-                    new GradientColorKey(Color.cyan, 0.0f),
-                    new GradientColorKey(Color.white, 1.0f)
+                new GradientColorKey(Color.cyan, 0.0f),
+                new GradientColorKey(Color.white, 1.0f)
                 },
                 new GradientAlphaKey[] {
-                    new GradientAlphaKey(1.0f, 0.0f),
-                    new GradientAlphaKey(0.0f, 1.0f)
+                new GradientAlphaKey(1.0f, 0.0f),
+                new GradientAlphaKey(0.0f, 1.0f)
                 }
             );
             laserLineRenderer.colorGradient = gradient;
         }
+        UpdateHeldWeaponVisual();
     }
+
 
     public void IncreaseDamage(int amount)
     {
@@ -61,6 +75,51 @@ public class PlayerWeaponHandler : MonoBehaviour
     {
         return weaponSlots[currentWeaponSlot];
     }
+    // NEW: Add weapon with prefab
+    public bool AddWeaponToSlots(WeaponType newWeapon, GameObject weaponPrefab = null)
+    {
+        // Prevent duplicates
+        if (weaponSlots.Contains(newWeapon))
+            return false;
+
+        // Only allow up to 2 weapons
+        if (weaponSlots.Count < 2)
+        {
+            weaponSlots.Add(newWeapon);
+            weaponPrefabSlots.Add(weaponPrefab);
+            UpdateHeldWeaponVisual();
+            return true;
+        }
+        return false;
+    }
+
+    // NEW: Replace weapon in slot (for weapon replace dialog)
+    public void ReplaceWeaponInSlot(int slotIndex, WeaponType newWeapon, GameObject weaponPrefab = null)
+    {
+        if (slotIndex >= 0 && slotIndex < weaponSlots.Count)
+        {
+            weaponSlots[slotIndex] = newWeapon;
+            weaponPrefabSlots[slotIndex] = weaponPrefab;
+            UpdateHeldWeaponVisual();
+        }
+    }
+
+    // NEW: Update held weapon visual
+    private void UpdateHeldWeaponVisual()
+    {
+        if (currentHeldWeaponInstance != null)
+        {
+            Destroy(currentHeldWeaponInstance);
+            currentHeldWeaponInstance = null;
+        }
+
+        GameObject prefab = weaponPrefabSlots.Count > currentWeaponSlot ? weaponPrefabSlots[currentWeaponSlot] : null;
+        if (prefab != null && weaponHolder != null)
+        {
+            currentHeldWeaponInstance = Instantiate(prefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+            weaponFirePoint = currentHeldWeaponInstance.transform.Find("FirePoint");
+        }
+    }
 
     public void Shoot(Vector3 playerPosition)
     {
@@ -70,10 +129,21 @@ public class PlayerWeaponHandler : MonoBehaviour
         Vector2 shootDir = (mouseWorldPos - playerPosition).normalized;
         int damageToSet = GetCurrentDamage();
 
+        Transform fireTransform = weaponFirePoint != null ? weaponFirePoint : weaponHolder;
+
+        // --- Muzzle Flash ---
+        if (muzzleFlashPrefab != null && fireTransform != null)
+        {
+            Vector3 flashPosition = fireTransform.position + (Vector3)(shootDir * 0.6f); // Slightly in front of fire point
+            GameObject flash = Instantiate(muzzleFlashPrefab, flashPosition, fireTransform.rotation, fireTransform);
+            flash.transform.localScale = new Vector3(0.1f, 0.1f, 1f); // Adjust scale and flip if needed
+            Destroy(flash, 0.1f); // Adjust duration as needed
+        }
+
         switch (currentWeapon)
         {
             case WeaponType.Pistol:
-                var pistolBullet = Instantiate(pistolBulletPrefab, firePoint.position, Quaternion.identity);
+                var pistolBullet = Instantiate(pistolBulletPrefab, fireTransform.position, fireTransform.rotation);
                 var pistolBulletComponent = pistolBullet.GetComponent<Bullet>();
                 pistolBulletComponent.SetDirection(shootDir);
                 pistolBulletComponent.SetDamage(damageToSet);
@@ -85,7 +155,7 @@ public class PlayerWeaponHandler : MonoBehaviour
                 {
                     float angle = -spreadAngle * 0.5f + spreadAngle * i / (pelletCount - 1);
                     Vector2 dir = Quaternion.Euler(0, 0, angle) * shootDir;
-                    var shotgunBullet = Instantiate(shotgunBulletPrefab, firePoint.position, Quaternion.identity);
+                    var shotgunBullet = Instantiate(shotgunBulletPrefab, fireTransform.position, fireTransform.rotation);
                     var shotgunBulletComponent = shotgunBullet.GetComponent<Bullet>();
                     shotgunBulletComponent.SetDirection(dir);
                     shotgunBulletComponent.SetDamage(damageToSet);
@@ -96,7 +166,6 @@ public class PlayerWeaponHandler : MonoBehaviour
                 break;
         }
     }
-
     public void OnAttackPressed(Vector3 playerPosition)
     {
         WeaponType currentWeapon = weaponSlots[currentWeaponSlot];
@@ -141,7 +210,8 @@ public class PlayerWeaponHandler : MonoBehaviour
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(UnityEngine.InputSystem.Mouse.current.position.ReadValue());
         mouseWorldPos.z = playerPosition.z;
         Vector2 shootDir = (mouseWorldPos - playerPosition).normalized;
-        RaycastHit2D[] hits = Physics2D.RaycastAll(firePoint.position, shootDir, laserRange);
+        Vector3 laserOrigin = weaponFirePoint != null ? weaponFirePoint.position : weaponHolder.position;
+        RaycastHit2D[] hits = Physics2D.RaycastAll(laserOrigin, shootDir, laserRange);
         foreach (var hit in hits)
         {
             // Ignore self (player)
@@ -169,7 +239,7 @@ public class PlayerWeaponHandler : MonoBehaviour
         mouseWorldPos.z = playerPosition.z;
         Vector2 shootDir = (mouseWorldPos - playerPosition).normalized;
 
-        Vector3 startPoint = firePoint.position;
+        Vector3 startPoint = weaponFirePoint != null ? weaponFirePoint.position : weaponHolder.position;
         Vector3 endPoint = startPoint + (Vector3)shootDir * laserRange;
 
         RaycastHit2D hit = Physics2D.Raycast(startPoint, shootDir, laserRange);
@@ -217,5 +287,6 @@ public class PlayerWeaponHandler : MonoBehaviour
                 laserLineRenderer.enabled = false;
         }
         currentWeaponSlot = (currentWeaponSlot + 1) % weaponSlots.Count;
+        UpdateHeldWeaponVisual();
     }
 }

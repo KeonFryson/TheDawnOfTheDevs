@@ -167,7 +167,7 @@ public class PowerUpUI : MonoBehaviour
     }
 
     // Weapon replacement dialog
-    public void ShowWeaponReplaceDialog(PlayerWeaponHandler handler, PlayerWeaponHandler.WeaponType newWeapon)
+    public void ShowWeaponReplaceDialog(PlayerWeaponHandler handler, PlayerWeaponHandler.WeaponType newWeapon, GameObject weaponPrefab)
     {
         showingWeaponReplaceDialog = true;
         Debug.Log($"ShowWeaponReplaceDialog called. New weapon: {newWeapon}");
@@ -189,14 +189,7 @@ public class PowerUpUI : MonoBehaviour
             card.SetupForWeaponReplace(weaponType, () =>
             {
                 Debug.Log($"Replacing weapon in slot {slotIndex}: {weaponType} -> {newWeapon}");
-                if (slotIndex >= 0 && slotIndex < handler.weaponSlots.Count)
-                {
-                    handler.weaponSlots[slotIndex] = newWeapon;
-                }
-                else
-                {
-                    Debug.LogError($"Invalid slotIndex {slotIndex} for weaponSlots.Count={handler.weaponSlots.Count}");
-                }
+                handler.ReplaceWeaponInSlot(slotIndex, newWeapon, weaponPrefab);
                 showingWeaponReplaceDialog = false;
                 StartCoroutine(HideAndContinue());
             });
@@ -207,5 +200,4 @@ public class PowerUpUI : MonoBehaviour
 
         Debug.Log("ShowWeaponReplaceDialog finished.");
     }
-
 }
