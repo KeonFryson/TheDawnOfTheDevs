@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerWeaponHandler : MonoBehaviour
 {
     public enum WeaponType { Pistol, Shotgun, Laser }
+
     [Header("Weapon Prefabs")]
     [SerializeField] GameObject pistolBulletPrefab;
     [SerializeField] GameObject shotgunBulletPrefab;

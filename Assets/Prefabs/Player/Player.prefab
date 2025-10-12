@@ -251,9 +251,13 @@ MonoBehaviour:
     type: 3}
   shotgunBulletPrefab: {fileID: 5802216331841413883, guid: 8800fc469ab4811458f625a18d8303ef,
     type: 3}
-  firePoint: {fileID: 6067856222326053573}
-  baseDamage: 100
+  startingWeaponPrefab: {fileID: 5733896515360075826, guid: 73aad9c17226fff40aa2b3f302d3efc2,
+    type: 3}
+  baseDamage: 1
   weaponSlots: 00000000
+  weaponHolder: {fileID: 6067856222326053573}
+  muzzleFlashPrefab: {fileID: 3014425226719090773, guid: 7b913a9edd15750479b2ef564a28e1e9,
+    type: 3}
   laserFireRate: 0.1
   laserRange: 100
   laserLineRenderer: {fileID: 6815335406502550258}
@@ -372,7 +376,7 @@ GameObject:
   - component: {fileID: 6874975839996702839}
   - component: {fileID: 6815335406502550258}
   m_Layer: 0
-  m_Name: FirePoint
+  m_Name: WeaponHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -442,7 +446,7 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b,
     type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

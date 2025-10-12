@@ -850,3 +850,9 @@ MonoBehaviour:
   descriptionText: {fileID: 8566478786191659384}
   tierTextTop: {fileID: 5451741206729303577}
   tierTexTBottom: {fileID: 6559509622615578363}
+  pistolIcon: {fileID: 21300010, guid: 5acb27b603af6d44ea6113c4b7b15385, type: 3}
+  shotgunIcon: {fileID: 21300012, guid: 5acb27b603af6d44ea6113c4b7b15385, type: 3}
+  laserIcon: {fileID: 21300024, guid: 5acb27b603af6d44ea6113c4b7b15385, type: 3}
+  pistolIconScale: {x: 1, y: 1}
+  shotgunIconScale: {x: 1.7, y: 0.5}
+  laserIconScale: {x: 1, y: 1}

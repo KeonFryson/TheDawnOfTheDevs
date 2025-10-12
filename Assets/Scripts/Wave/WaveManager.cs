@@ -1,6 +1,7 @@
 // ============================
 // WaveManager.cs
 // ============================
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +12,9 @@ public class WaveManager : MonoBehaviour
     public Transform[] spawnPoints;
     public int baseEnemiesPerWave = 5;
     public float difficultyMultiplier = 1.25f;
+    public float enemySpawnRadius = 5f;
+    [Tooltip("Delay in seconds between enemy spawns")]
+    public float enemySpawnDelay = 0.5f;
 
     [Header("References")]
     public PowerUpUI powerUpUI;
@@ -18,7 +22,7 @@ public class WaveManager : MonoBehaviour
     private int currentWave = 0;
     private int enemiesAlive = 0;
     private bool waveActive = false;
-    public float enemySpawnRadius = 5f;
+
     private void Start()
     {
         StartWave();
@@ -41,6 +45,12 @@ public class WaveManager : MonoBehaviour
             (shuffledSpawns[i], shuffledSpawns[swapIdx]) = (shuffledSpawns[swapIdx], shuffledSpawns[i]);
         }
 
+        StartCoroutine(SpawnEnemiesCoroutine(enemyCount, shuffledSpawns));
+        Debug.Log($"Wave {currentWave} started with {enemyCount} enemies.");
+    }
+
+    private IEnumerator SpawnEnemiesCoroutine(int enemyCount, List<Transform> shuffledSpawns)
+    {
         for (int i = 0; i < enemyCount; i++)
         {
             var prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
@@ -62,9 +72,9 @@ public class WaveManager : MonoBehaviour
             {
                 Debug.LogWarning($"Enemy prefab {enemy.name} missing Enemy script!");
             }
-        }
 
-        Debug.Log($"Wave {currentWave} started with {enemyCount} enemies.");
+            yield return new WaitForSeconds(enemySpawnDelay);
+        }
     }
 
     private void OnEnemyDeath()
