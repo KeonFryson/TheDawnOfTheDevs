@@ -241,12 +241,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1519976176}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &493741352 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6067856222326053573, guid: 5d3fc2a61681947458099e6d2e0d7031,
-    type: 3}
-  m_PrefabInstance: {fileID: 1023739534200844531}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,10 +622,11 @@ MonoBehaviour:
   - {fileID: 1809591642}
   - {fileID: 255211747}
   - {fileID: 868795116}
-  baseEnemiesPerWave: 0
+  baseEnemiesPerWave: 1
   difficultyMultiplier: 1.25
-  powerUpUI: {fileID: 1788018434}
   enemySpawnRadius: 5
+  enemySpawnDelay: 0.5
+  powerUpUI: {fileID: 1788018434}
 --- !u!4 &1341123358
 Transform:
   m_ObjectHideFlags: 0
@@ -819,104 +814,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1519976176}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2137557371
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2137557374}
-  - component: {fileID: 2137557373}
-  - component: {fileID: 2137557375}
-  m_Layer: 0
-  m_Name: Muzzle
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2137557373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2137557371}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7070baea053b54b46a38477c710b665a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnimatedTexture
-  fps: 30
-  frames:
-  - {fileID: 2800000, guid: b903492db4e935f42b0048b5be61efca, type: 3}
-  - {fileID: 2800000, guid: 6568df5f63968bb4aad8edf29cfbe242, type: 3}
-  - {fileID: 2800000, guid: 092f4e26922091148b8e243750b33da3, type: 3}
---- !u!4 &2137557374
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2137557371}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.56, y: 6.52167, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &2137557375
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2137557371}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2140132580
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,32 +1015,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 6650296237991179526, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_Name
-      value: WeaponHolder
-      objectReference: {fileID: 0}
-    - target: {fileID: 6650296237991179526, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6874975839996702839, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7642581937252532264, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: weaponHolder
-      value: 
-      objectReference: {fileID: 493741352}
-    - target: {fileID: 7642581937252532264, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: startingWeaponPrefab
-      value: 
-      objectReference: {fileID: 5733896515360075826, guid: 73aad9c17226fff40aa2b3f302d3efc2,
-        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1257,6 +1128,77 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6843408818970920322, guid: 8931669bd159db64d95ab6fb30d35d0d,
+        type: 3}
+      propertyPath: availablePowerUps.Array.size
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6843408818970920322, guid: 8931669bd159db64d95ab6fb30d35d0d,
+        type: 3}
+      propertyPath: 'availablePowerUps.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 237205afbe4eb8f41b0ce2d6b769614b,
+        type: 2}
+    - target: {fileID: 6843408818970920322, guid: 8931669bd159db64d95ab6fb30d35d0d,
+        type: 3}
+      propertyPath: 'availablePowerUps.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 8edb918a975bf6b4aa940419e60ccbfa,
+        type: 2}
+    - target: {fileID: 6843408818970920322, guid: 8931669bd159db64d95ab6fb30d35d0d,
+        type: 3}
+      propertyPath: 'availablePowerUps.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 68043a636cd00a542804b891577c0e19,
+        type: 2}
+    - target: {fileID: 6843408818970920322, guid: 8931669bd159db64d95ab6fb30d35d0d,
+        type: 3}
+      propertyPath: 'availablePowerUps.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: c42fd43e5f3a7254eb035fd8c4149a1b,
+        type: 2}
+    - target: {fileID: 6843408818970920322, guid: 8931669bd159db64d95ab6fb30d35d0d,
+        type: 3}
+      propertyPath: 'availablePowerUps.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: aafbdf379a5223647ac769bff04c4ac3,
+        type: 2}
+    - target: {fileID: 6843408818970920322, guid: 8931669bd159db64d95ab6fb30d35d0d,
+        type: 3}
+      propertyPath: 'availablePowerUps.Array.data[5]'
+      value: 
+      objectReference: {fileID: 11400000, guid: c2bfd7f938c5b784ea797ddea010c4d8,
+        type: 2}
+    - target: {fileID: 6843408818970920322, guid: 8931669bd159db64d95ab6fb30d35d0d,
+        type: 3}
+      propertyPath: 'availablePowerUps.Array.data[6]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 52382260360a78f41a3f21c1d70b6aa2,
+        type: 2}
+    - target: {fileID: 6843408818970920322, guid: 8931669bd159db64d95ab6fb30d35d0d,
+        type: 3}
+      propertyPath: 'availablePowerUps.Array.data[7]'
+      value: 
+      objectReference: {fileID: 11400000, guid: cfbc1aede05d78b46a1753f791784c8e,
+        type: 2}
+    - target: {fileID: 6843408818970920322, guid: 8931669bd159db64d95ab6fb30d35d0d,
+        type: 3}
+      propertyPath: 'availablePowerUps.Array.data[8]'
+      value: 
+      objectReference: {fileID: 11400000, guid: da7b6cc72fa0ee349b3538015bf200f2,
+        type: 2}
+    - target: {fileID: 6843408818970920322, guid: 8931669bd159db64d95ab6fb30d35d0d,
+        type: 3}
+      propertyPath: 'availablePowerUps.Array.data[9]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 1aa413ea65187e04b9fc545c9eeffe61,
+        type: 2}
+    - target: {fileID: 6843408818970920322, guid: 8931669bd159db64d95ab6fb30d35d0d,
+        type: 3}
+      propertyPath: 'availablePowerUps.Array.data[10]'
+      value: 
+      objectReference: {fileID: 11400000, guid: b9c543bd75711214db7dd89697cc3d92,
+        type: 2}
     - target: {fileID: 8474581603289379210, guid: 8931669bd159db64d95ab6fb30d35d0d,
         type: 3}
       propertyPath: m_Name
@@ -1280,4 +1222,3 @@ SceneRoots:
   - {fileID: 943324268}
   - {fileID: 1341123358}
   - {fileID: 1519976176}
-  - {fileID: 2137557374}
