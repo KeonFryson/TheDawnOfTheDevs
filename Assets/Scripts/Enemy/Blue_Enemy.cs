@@ -29,10 +29,20 @@ public class Blue_Enemy : MonoBehaviour
     [Header("Attack Area")]
     public Transform attackTriangle;
 
+    [Header("Dodge Movement")]
+    public float dodgeInterval = 2.5f; // How often to dodge (seconds)
+    public float dodgeDuration = 0.4f; // How long the dodge lasts (seconds)
+    public float dodgeStrength = 1.2f; // How strong the diagonal is
+
+    private float dodgeTimer = 0f;
+    private float dodgeTimeLeft = 0f;
+    private int dodgeDirection = 0; // -1 = left, 1 = right, 0 = none
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         timer = changeDirTimer;
+        dodgeTimer = UnityEngine.Random.Range(0, dodgeInterval); // Stagger dodges
     }
 
     private void FixedUpdate()
@@ -44,11 +54,37 @@ public class Blue_Enemy : MonoBehaviour
             Vector2 dirToPlayer = ((Vector2)player.transform.position - rb.position).normalized;
             float distance = Vector2.Distance(rb.position, player.transform.position);
 
+            // Handle dodge logic
+            dodgeTimer -= Time.fixedDeltaTime;
+            if (dodgeTimeLeft > 0f)
+            {
+                dodgeTimeLeft -= Time.fixedDeltaTime;
+            }
+            else if (dodgeTimer <= 0f)
+            {
+                dodgeTimeLeft = dodgeDuration;
+                dodgeTimer = dodgeInterval + UnityEngine.Random.Range(-0.5f, 0.5f); // Add some randomness
+                dodgeDirection = UnityEngine.Random.value < 0.5f ? -1 : 1;
+            }
+            else
+            {
+                dodgeDirection = 0;
+            }
+
             // Separation from other enemies
             Vector2 separation = CalculateSeparation();
 
-            // Combine movement: toward player + separation
-            Vector2 move = dirToPlayer + separation * separationStrength;
+            // Calculate dodge offset
+            Vector2 dodgeOffset = Vector2.zero;
+            if (dodgeDirection != 0)
+            {
+                // Get perpendicular direction to player
+                Vector2 perp = new Vector2(-dirToPlayer.y, dirToPlayer.x) * dodgeDirection;
+                dodgeOffset = perp.normalized * dodgeStrength;
+            }
+
+            // Combine movement: toward player + dodge + separation
+            Vector2 move = dirToPlayer + dodgeOffset + separation * separationStrength;
 
             // Move toward player if outside attack range
             if (distance > attackRange)
@@ -84,20 +120,24 @@ public class Blue_Enemy : MonoBehaviour
         return separation;
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, separationRadius);
+    }
+
     private void Update()
     {
         if (isDead) return;
         attackTimer -= Time.deltaTime;
-      
     }
+
     public void TryAttackPlayer(PlayerInputHandler player)
     {
         if (attackTimer > 0f) return;
         player.ChangeHealth(-10f);
         attackTimer = attackCooldown;
     }
-
-   
 
     public void TakeDamage(float amount)
     {

@@ -45,6 +45,14 @@ public class PlayerInputHandler : MonoBehaviour
         m_controls.Disable();
     }
 
+    public void SetInputEnabled(bool enabled)
+    {
+        if (enabled)
+            m_controls.Enable();
+        else
+            m_controls.Disable();
+    }
+
     private void FixedUpdate()
     {
         MovementSpeed = BaseSpeed;

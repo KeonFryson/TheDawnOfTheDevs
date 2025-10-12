@@ -26,6 +26,7 @@ public class PowerUpCard : MonoBehaviour
         this.onSelected = onSelected;
 
         if (icon != null) icon.sprite = powerUp.icon;
+        icon.transform.localScale = new Vector3(powerUp.iconScale.x, powerUp.iconScale.y, 1f);
         if (nameText != null) nameText.text = powerUp.powerUpName;
         if (descriptionText != null) descriptionText.text = powerUp.description;
         if (tierTextTop != null) tierTextTop.text = powerUp.tier.ToString();

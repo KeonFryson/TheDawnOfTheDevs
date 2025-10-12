@@ -111,9 +111,10 @@ MonoBehaviour:
   health: 20
   attackRange: 9
   attackCooldown: 1
-  separationRadius: 1
-  separationStrength: 1.2
+  separationRadius: 5.5
+  separationStrength: 2
   attackTriangle: {fileID: 2149990083765924301}
+  randomDirectionStrength: 2
 --- !u!58 &2213334352170586336
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -1,6 +1,4 @@
-// ============================
-// PowerUpUI.cs
-// ============================
+
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +23,6 @@ public class PowerUpUI : MonoBehaviour
         { PowerUpTier.Major, 0.25f },
         { PowerUpTier.Ultimate, 0.05f }
     };
-
 
     private void Awake()
     {
@@ -59,12 +56,14 @@ public class PowerUpUI : MonoBehaviour
         Debug.Log("Activating PowerUp UI.");
         gameObject.SetActive(true);
 
+        // Wait one frame before pausing and disabling input
+        StartCoroutine(PauseAfterFrame());
+
         int cardCount = Mathf.Min(3, availablePowerUps.Length);
         Debug.Log($"Calculated cardCount: {cardCount}");
 
         List<PowerUp> chosen = new();
 
-        // Weighted random selection
         // Weighted random selection (allow duplicates)
         for (int i = 0; i < cardCount; i++)
         {
@@ -96,6 +95,14 @@ public class PowerUpUI : MonoBehaviour
         cardInputBlockUntil = Time.unscaledTime + cardInputBlockTime;
 
         Debug.Log("ShowCards finished.");
+    }
+
+    private IEnumerator PauseAfterFrame()
+    {
+        yield return null;
+        Time.timeScale = 0f;
+        if (player != null)
+            player.SetInputEnabled(false);
     }
 
     private PowerUp GetWeightedRandomPowerUp()
@@ -137,6 +144,8 @@ public class PowerUpUI : MonoBehaviour
         Debug.Log("Starting next wave...");
         FindFirstObjectByType<WaveManager>()?.StartWave();
         StartCoroutine(DeactivateNextFrame());
+
+        Time.timeScale = 1f;
     }
 
     public void HideCards()
@@ -144,7 +153,9 @@ public class PowerUpUI : MonoBehaviour
         foreach (Transform child in cardParent)
             Destroy(child.gameObject);
 
-       
+        Time.timeScale = 1f;
+        if (player != null)
+            player.SetInputEnabled(true);
     }
 
     private void HideCardsInstant()
@@ -152,6 +163,10 @@ public class PowerUpUI : MonoBehaviour
         foreach (Transform child in cardParent)
             Destroy(child.gameObject);
         gameObject.SetActive(false);
+
+        Time.timeScale = 1f;
+        if (player != null)
+            player.SetInputEnabled(true);
     }
 
     private IEnumerator DeactivateNextFrame()
@@ -171,6 +186,9 @@ public class PowerUpUI : MonoBehaviour
     {
         showingWeaponReplaceDialog = true;
         Debug.Log($"ShowWeaponReplaceDialog called. New weapon: {newWeapon}");
+
+        // Wait one frame before pausing and disabling input
+        StartCoroutine(PauseAfterFrame());
 
         // Destroy any existing cards
         foreach (Transform child in cardParent)
