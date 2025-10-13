@@ -10,24 +10,32 @@ public class PlayerWeaponHandler : MonoBehaviour
     [Header("Weapon Prefabs")]
     [SerializeField] GameObject pistolBulletPrefab;
     [SerializeField] GameObject shotgunBulletPrefab;
-    //[SerializeField] Transform firePoint;
-    //public Transform FirePoint => firePoint;
 
     [Header("Held Weapon Prefab")]
     [SerializeField] GameObject startingWeaponPrefab;
+    [SerializeField] WeaponStats startingWeaponStats;
 
     [SerializeField] private int baseDamage = 1;
     private int currentDamage;
 
-    public List<WeaponType> weaponSlots = new List<WeaponType> { WeaponType.Pistol };
+    [System.Serializable]
+    public class WeaponSlot
+    {
+        public WeaponType type;
+        public GameObject prefab;
+        public int ammo;
+        public int maxAmmo;
+        public WeaponStats stats;
+    }
+
+    public List<WeaponSlot> weaponSlots = new List<WeaponSlot>();
     private int currentWeaponSlot = 0;
 
-    // NEW: Store weapon prefab references for each slot
-    private List<GameObject> weaponPrefabSlots = new List<GameObject>();
     private GameObject currentHeldWeaponInstance;
     [SerializeField] private Transform weaponHolder;
     [SerializeField] private GameObject muzzleFlashPrefab;
     public Transform WeaponHolder => weaponHolder;
+
     [Header("Laser Settings")]
     [SerializeField] private float laserFireRate = 0.1f;
     [SerializeField] private float laserRange = 100f;
@@ -36,11 +44,20 @@ public class PlayerWeaponHandler : MonoBehaviour
     private bool isLaserActive = false;
 
     private Transform weaponFirePoint;
+
     private void Awake()
     {
         currentDamage = baseDamage;
-        // Ensure weaponPrefabSlots matches weaponSlots count
-        weaponPrefabSlots.Add(startingWeaponPrefab); // <-- Use the assigned prefab for the first weapon
+
+        weaponSlots.Add(new WeaponSlot
+        {
+            type = WeaponType.Pistol,
+            prefab = startingWeaponPrefab,
+            ammo = startingWeaponStats != null ? startingWeaponStats.maxAmmo : 1,
+            maxAmmo = startingWeaponStats != null ? startingWeaponStats.maxAmmo : 1,
+            stats = startingWeaponStats
+        });
+
         if (laserLineRenderer != null)
         {
             laserLineRenderer.startWidth = 2f;
@@ -59,8 +76,8 @@ public class PlayerWeaponHandler : MonoBehaviour
             laserLineRenderer.colorGradient = gradient;
         }
         UpdateHeldWeaponVisual();
+        UpdateWeaponUI();
     }
-
 
     public void IncreaseDamage(int amount)
     {
@@ -74,38 +91,48 @@ public class PlayerWeaponHandler : MonoBehaviour
 
     public WeaponType GetCurrentWeapon()
     {
-        return weaponSlots[currentWeaponSlot];
+        return weaponSlots[currentWeaponSlot].type;
     }
-    // NEW: Add weapon with prefab
-    public bool AddWeaponToSlots(WeaponType newWeapon, GameObject weaponPrefab = null)
+
+    public bool AddWeaponToSlots(WeaponType newWeapon, GameObject weaponPrefab = null, int ammo = 1, int maxAmmo = 1, WeaponStats stats = null)
     {
-        // Prevent duplicates
-        if (weaponSlots.Contains(newWeapon))
+        if (weaponSlots.Any(ws => ws.type == newWeapon))
             return false;
 
-        // Only allow up to 2 weapons
         if (weaponSlots.Count < 2)
         {
-            weaponSlots.Add(newWeapon);
-            weaponPrefabSlots.Add(weaponPrefab);
+            weaponSlots.Add(new WeaponSlot
+            {
+                type = newWeapon,
+                prefab = weaponPrefab,
+                ammo = ammo,
+                maxAmmo = maxAmmo,
+                stats = stats
+            });
             UpdateHeldWeaponVisual();
+            UpdateWeaponUI();
             return true;
         }
         return false;
     }
 
-    // NEW: Replace weapon in slot (for weapon replace dialog)
-    public void ReplaceWeaponInSlot(int slotIndex, WeaponType newWeapon, GameObject weaponPrefab = null)
+    public void ReplaceWeaponInSlot(int slotIndex, WeaponType newWeapon, GameObject weaponPrefab = null, int ammo = 1, int maxAmmo = 1, WeaponStats stats = null)
     {
         if (slotIndex >= 0 && slotIndex < weaponSlots.Count)
         {
-            weaponSlots[slotIndex] = newWeapon;
-            weaponPrefabSlots[slotIndex] = weaponPrefab;
+            weaponSlots[slotIndex] = new WeaponSlot
+            {
+                type = newWeapon,
+                prefab = weaponPrefab,
+                ammo = ammo,
+                maxAmmo = maxAmmo,
+                stats = stats
+            };
             UpdateHeldWeaponVisual();
+            UpdateWeaponUI();
         }
     }
 
-    // NEW: Update held weapon visual
     private void UpdateHeldWeaponVisual()
     {
         if (currentHeldWeaponInstance != null)
@@ -114,31 +141,38 @@ public class PlayerWeaponHandler : MonoBehaviour
             currentHeldWeaponInstance = null;
         }
 
-        GameObject prefab = weaponPrefabSlots.Count > currentWeaponSlot ? weaponPrefabSlots[currentWeaponSlot] : null;
-        if (prefab != null && weaponHolder != null)
+        WeaponSlot slot = weaponSlots.Count > currentWeaponSlot ? weaponSlots[currentWeaponSlot] : null;
+        if (slot != null && slot.prefab != null && weaponHolder != null)
         {
-            currentHeldWeaponInstance = Instantiate(prefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+            currentHeldWeaponInstance = Instantiate(slot.prefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
             weaponFirePoint = currentHeldWeaponInstance.transform.Find("FirePoint");
         }
     }
 
     public void Shoot(Vector3 playerPosition)
     {
-        WeaponType currentWeapon = weaponSlots[currentWeaponSlot];
+        WeaponSlot slot = weaponSlots[currentWeaponSlot];
+        if (slot.ammo <= 0)
+        {
+            AutoSwitchWeaponIfOutOfAmmo();
+            return;
+        }
+
+        WeaponType currentWeapon = slot.type;
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(UnityEngine.InputSystem.Mouse.current.position.ReadValue());
         mouseWorldPos.z = playerPosition.z;
         Vector2 shootDir = (mouseWorldPos - playerPosition).normalized;
-        int damageToSet = GetCurrentDamage();
+        int damageToSet = (slot.stats != null ? slot.stats.damage : GetCurrentDamage()) + (currentDamage - baseDamage);
 
         Transform fireTransform = weaponFirePoint != null ? weaponFirePoint : weaponHolder;
 
         // --- Muzzle Flash ---
         if (muzzleFlashPrefab != null && fireTransform != null)
         {
-            Vector3 flashPosition = fireTransform.position + (Vector3)(shootDir * 0.6f); // Slightly in front of fire point
+            Vector3 flashPosition = fireTransform.position + (Vector3)(shootDir * 0.6f);
             GameObject flash = Instantiate(muzzleFlashPrefab, flashPosition, fireTransform.rotation, fireTransform);
-            flash.transform.localScale = new Vector3(0.1f, 0.1f, 1f); // Adjust scale and flip if needed
-            Destroy(flash, 0.1f); // Adjust duration as needed
+            flash.transform.localScale = new Vector3(0.1f, 0.1f, 1f);
+            Destroy(flash, 0.1f);
         }
 
         switch (currentWeapon)
@@ -148,10 +182,11 @@ public class PlayerWeaponHandler : MonoBehaviour
                 var pistolBulletComponent = pistolBullet.GetComponent<Bullet>();
                 pistolBulletComponent.SetDirection(shootDir);
                 pistolBulletComponent.SetDamage(damageToSet);
+                slot.ammo--;
                 break;
             case WeaponType.Shotgun:
-                float spreadAngle = 15f;
-                int pelletCount = 5;
+                float spreadAngle = slot.stats != null ? slot.stats.spreadAngle : 15f;
+                int pelletCount = slot.stats != null ? slot.stats.pelletCount : 5;
                 for (int i = 0; i < pelletCount; i++)
                 {
                     float angle = -spreadAngle * 0.5f + spreadAngle * i / (pelletCount - 1);
@@ -161,15 +196,27 @@ public class PlayerWeaponHandler : MonoBehaviour
                     shotgunBulletComponent.SetDirection(dir);
                     shotgunBulletComponent.SetDamage(damageToSet);
                 }
+                slot.ammo--;
                 break;
             case WeaponType.Laser:
-                // No projectile for raycast laser
+                slot.ammo--;
                 break;
         }
+
+        UpdateWeaponUI();
+        AutoSwitchWeaponIfOutOfAmmo();
     }
+
     public void OnAttackPressed(Vector3 playerPosition)
     {
-        WeaponType currentWeapon = weaponSlots[currentWeaponSlot];
+        WeaponSlot slot = weaponSlots[currentWeaponSlot];
+        WeaponType currentWeapon = slot.type;
+        if (slot.ammo <= 0)
+        {
+            AutoSwitchWeaponIfOutOfAmmo();
+            return;
+        }
+
         if (currentWeapon == WeaponType.Laser)
         {
             if (laserCoroutine == null)
@@ -186,7 +233,8 @@ public class PlayerWeaponHandler : MonoBehaviour
 
     public void OnAttackReleased()
     {
-        WeaponType currentWeapon = weaponSlots[currentWeaponSlot];
+        WeaponSlot slot = weaponSlots[currentWeaponSlot];
+        WeaponType currentWeapon = slot.type;
         if (currentWeapon == WeaponType.Laser && laserCoroutine != null)
         {
             StopCoroutine(laserCoroutine);
@@ -202,6 +250,14 @@ public class PlayerWeaponHandler : MonoBehaviour
         while (true)
         {
             FireLaser(playerPosition);
+            WeaponSlot slot = weaponSlots[currentWeaponSlot];
+            slot.ammo--;
+            UpdateWeaponUI();
+            if (slot.ammo <= 0)
+            {
+                AutoSwitchWeaponIfOutOfAmmo();
+                yield break;
+            }
             yield return new WaitForSeconds(laserFireRate);
         }
     }
@@ -215,11 +271,9 @@ public class PlayerWeaponHandler : MonoBehaviour
         RaycastHit2D[] hits = Physics2D.RaycastAll(laserOrigin, shootDir, laserRange);
         foreach (var hit in hits)
         {
-            // Ignore self (player)
             if (hit.collider != null && hit.collider.gameObject == gameObject)
                 continue;
 
-            // Log what the laser is hitting
             Debug.Log($"Laser hit: {hit.collider.name} (Tag: {hit.collider.tag}, Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)})");
 
             Blue_Enemy enemy = hit.collider.GetComponentInParent<Blue_Enemy>();
@@ -263,24 +317,18 @@ public class PlayerWeaponHandler : MonoBehaviour
         laserLineRenderer.SetPosition(1, endPoint);
     }
 
-    public bool AddWeaponToSlots(WeaponType newWeapon)
+    public void UpdateWeaponUI()
     {
-        // Prevent duplicates
-        if (weaponSlots.Contains(newWeapon))
-            return false;
-
-        // Only allow up to 2 weapons
-        if (weaponSlots.Count < 2)
+        var weaponUI = FindFirstObjectByType<WeaponUI>();
+        if (weaponUI != null)
         {
-            weaponSlots.Add(newWeapon);
-            return true;
+            weaponUI.UpdateWeaponDisplay(weaponSlots[currentWeaponSlot]);
         }
-        return false;
     }
 
     public void SwitchWeapon()
     {
-        if (weaponSlots[currentWeaponSlot] == WeaponType.Laser && laserCoroutine != null)
+        if (weaponSlots[currentWeaponSlot].type == WeaponType.Laser && laserCoroutine != null)
         {
             StopCoroutine(laserCoroutine);
             laserCoroutine = null;
@@ -289,5 +337,8 @@ public class PlayerWeaponHandler : MonoBehaviour
         }
         currentWeaponSlot = (currentWeaponSlot + 1) % weaponSlots.Count;
         UpdateHeldWeaponVisual();
+        UpdateWeaponUI();
     }
+
+  s
 }

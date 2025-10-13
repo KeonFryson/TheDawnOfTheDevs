@@ -8,6 +8,7 @@ public class IncreaseHealthPowerUp : PowerUp
 
     public override void Apply(PlayerInputHandler player)
     {
+
         player.ChangeHealth(healthIncrease);
     }
 }
