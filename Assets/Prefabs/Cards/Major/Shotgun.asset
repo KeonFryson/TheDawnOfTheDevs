@@ -20,3 +20,10 @@ MonoBehaviour:
   weaponType: 1
   weaponPrefab: {fileID: 9172291322935269301, guid: 4cbe9aea9428b4c4cb6a839137efc824,
     type: 3}
+  weaponStats:
+    damage: 2
+    maxAmmo: 100
+    fireRate: 0.5
+    spreadAngle: 15
+    pelletCount: 5
+    range: 10
