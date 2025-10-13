@@ -340,5 +340,24 @@ public class PlayerWeaponHandler : MonoBehaviour
         UpdateWeaponUI();
     }
 
-  s
+    private void AutoSwitchWeaponIfOutOfAmmo()
+    {
+        if (weaponSlots[currentWeaponSlot].ammo > 0)
+            return;
+
+        int startSlot = currentWeaponSlot;
+        int nextSlot = (currentWeaponSlot + 1) % weaponSlots.Count;
+        while (nextSlot != startSlot)
+        {
+            if (weaponSlots[nextSlot].ammo > 0)
+            {
+                currentWeaponSlot = nextSlot;
+                UpdateHeldWeaponVisual();
+                UpdateWeaponUI();
+                return;
+            }
+            nextSlot = (nextSlot + 1) % weaponSlots.Count;
+        }
+        // If all weapons are out of ammo, you can show a UI or play a sound here
+    }
 }
