@@ -33,7 +33,9 @@ public class PlayerInputHandler : MonoBehaviour
         m_controls.Player.Attack.canceled += ctx => weaponHandler.OnAttackReleased();
 
         m_controls.Player.SwitchWeapon.performed += ctx => weaponHandler.SwitchWeapon();
+        m_controls.Player.Reload.performed += ctx => weaponHandler.ReloadCurrentWeapon();
     }
+
 
     private void OnEnable()
     {

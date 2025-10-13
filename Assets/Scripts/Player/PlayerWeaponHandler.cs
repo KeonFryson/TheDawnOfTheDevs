@@ -45,6 +45,9 @@ public class PlayerWeaponHandler : MonoBehaviour
 
     private Transform weaponFirePoint;
 
+    private bool isReloading = false;
+    [SerializeField] private float reloadTime = 1.5f;
+
     private void Awake()
     {
         currentDamage = baseDamage;
@@ -53,8 +56,8 @@ public class PlayerWeaponHandler : MonoBehaviour
         {
             type = WeaponType.Pistol,
             prefab = startingWeaponPrefab,
-            ammo = startingWeaponStats != null ? startingWeaponStats.maxAmmo : 1,
-            maxAmmo = startingWeaponStats != null ? startingWeaponStats.maxAmmo : 1,
+            ammo = startingWeaponStats.maxAmmo,
+            maxAmmo = startingWeaponStats.maxAmmo,
             stats = startingWeaponStats
         });
 
@@ -116,6 +119,30 @@ public class PlayerWeaponHandler : MonoBehaviour
         return false;
     }
 
+    public void ReloadCurrentWeapon()
+    {
+        if (isReloading) return;
+
+        WeaponSlot slot = weaponSlots[currentWeaponSlot];
+        if (slot.ammo == slot.maxAmmo) return; // Already full
+
+        StartCoroutine(ReloadCoroutine());
+    }
+
+    private IEnumerator ReloadCoroutine()
+    {
+        isReloading = true;
+        // play reload animation or sound here
+
+        yield return new WaitForSeconds(reloadTime);
+
+        WeaponSlot slot = weaponSlots[currentWeaponSlot];
+        slot.ammo = slot.maxAmmo;
+
+        isReloading = false;
+        UpdateWeaponUI();
+    }
+
     public void ReplaceWeaponInSlot(int slotIndex, WeaponType newWeapon, GameObject weaponPrefab = null, int ammo = 1, int maxAmmo = 1, WeaponStats stats = null)
     {
         if (slotIndex >= 0 && slotIndex < weaponSlots.Count)
@@ -151,6 +178,8 @@ public class PlayerWeaponHandler : MonoBehaviour
 
     public void Shoot(Vector3 playerPosition)
     {
+        if (isReloading) return;
+
         WeaponSlot slot = weaponSlots[currentWeaponSlot];
         if (slot.ammo <= 0)
         {

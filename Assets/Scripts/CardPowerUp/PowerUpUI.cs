@@ -64,16 +64,17 @@ public class PowerUpUI : MonoBehaviour
 
         List<PowerUp> chosen = new();
 
-        // Weighted random selection (allow duplicates)
-        for (int i = 0; i < cardCount; i++)
+        // Weighted random selection (no duplicates)
+        int attempts = 0;
+        while (chosen.Count < cardCount && attempts < 100)
         {
             var selected = GetWeightedRandomPowerUp();
-            Debug.Log(selected != null
-                ? $"Selected power-up: {selected.powerUpName} (Tier: {selected.tier})"
-                : "Selected power-up: null");
-
-            if (selected != null)
+            attempts++;
+            if (selected != null && !chosen.Contains(selected))
+            {
+                Debug.Log($"Selected power-up: {selected.powerUpName} (Tier: {selected.tier})");
                 chosen.Add(selected);
+            }
         }
 
         Debug.Log($"Total chosen power-ups: {chosen.Count}");
