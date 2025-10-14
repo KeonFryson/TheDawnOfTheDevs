@@ -38,9 +38,20 @@ public class Blue_Enemy : MonoBehaviour
     private float dodgeTimeLeft = 0f;
     private int dodgeDirection = 0; // -1 = left, 1 = right, 0 = none
 
+    // === Obstacle Avoidance ===
+    [Header("Obstacle Avoidance")]
+    public float obstacleAvoidanceRadius = 1.2f;
+    public float obstacleAvoidanceStrength = 2.0f;
+    public LayerMask obstacleLayerMask = 0; // Assign in inspector (e.g. "Obstacles")
+
+    // === Front Marker ===
+    [Header("Front Marker")]
+    public Transform frontMarker; // Assign in inspector (e.g., empty GameObject or sprite)
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.freezeRotation = true; // Prevent spinning
         timer = changeDirTimer;
         dodgeTimer = UnityEngine.Random.Range(0, dodgeInterval); // Stagger dodges
     }
@@ -83,13 +94,17 @@ public class Blue_Enemy : MonoBehaviour
                 dodgeOffset = perp.normalized * dodgeStrength;
             }
 
-            // Combine movement: toward player + dodge + separation
-            Vector2 move = dirToPlayer + dodgeOffset + separation * separationStrength;
+            // Obstacle avoidance
+            Vector2 obstacleAvoidance = CalculateObstacleAvoidance();
 
-            // Move toward player if outside attack range
+            // Combine movement: toward player + dodge + separation + obstacle avoidance
+            Vector2 move = dirToPlayer + dodgeOffset + separation * separationStrength + obstacleAvoidance * obstacleAvoidanceStrength;
+
+            // Always move straight toward the front (player direction)
+            Vector2 moveDirection = dirToPlayer;
             if (distance > attackRange)
             {
-                rb.MovePosition(rb.position + move.normalized * speed * Time.fixedDeltaTime);
+                rb.MovePosition(rb.position + moveDirection.normalized * speed * Time.fixedDeltaTime);
             }
 
             // Position and rotate the triangle in front of the enemy
@@ -99,6 +114,14 @@ public class Blue_Enemy : MonoBehaviour
                 attackTriangle.localPosition = dirToPlayer * triangleOffset;
                 float angle = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg;
                 attackTriangle.localRotation = Quaternion.Euler(0, 0, angle - 90);
+            }
+
+            // Rotate front marker to face the player
+            if (frontMarker != null)
+            {
+                float frontAngle = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg;
+                frontMarker.localRotation = Quaternion.Euler(0, 0, frontAngle - 90);
+                frontMarker.localPosition = dirToPlayer * 0.7f; // Place marker in front
             }
         }
     }
@@ -120,10 +143,37 @@ public class Blue_Enemy : MonoBehaviour
         return separation;
     }
 
+    private Vector2 CalculateObstacleAvoidance()
+    {
+        Vector2 avoidance = Vector2.zero;
+        Collider2D[] obstacles = Physics2D.OverlapCircleAll(rb.position, obstacleAvoidanceRadius, obstacleLayerMask);
+        foreach (var obs in obstacles)
+        {
+            if (obs.gameObject != this.gameObject)
+            {
+                Vector2 away = (rb.position - (Vector2)obs.transform.position);
+                float dist = away.magnitude;
+                if (dist > 0)
+                    avoidance += away / dist; // Weighted by distance
+            }
+        }
+        return avoidance;
+    }
+
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, separationRadius);
+        // Draw front direction line
+        if (frontMarker != null)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(transform.position, frontMarker.position);
+        }
+        else
+        {
+            // If no marker, draw a default line forward
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(transform.position, transform.position + transform.up * 1.0f);
+        }
     }
 
     private void Update()

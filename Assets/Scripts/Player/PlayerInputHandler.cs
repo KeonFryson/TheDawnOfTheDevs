@@ -20,6 +20,12 @@ public class PlayerInputHandler : MonoBehaviour
     [Header("Weapon Handler")]
     [SerializeField] private PlayerWeaponHandler weaponHandler;
 
+    [Header("Footstep Audio")]
+    [SerializeField] private AudioClip[] footstepClips;
+    [SerializeField] private AudioSource footstepSource;
+    [SerializeField] private float footstepInterval = 0.4f;
+    private float footstepTimer = 0f;
+
     private void Awake()
     {
         m_controls = new InputSystem_Actions();
@@ -35,7 +41,6 @@ public class PlayerInputHandler : MonoBehaviour
         m_controls.Player.SwitchWeapon.performed += ctx => weaponHandler.SwitchWeapon();
         m_controls.Player.Reload.performed += ctx => weaponHandler.ReloadCurrentWeapon();
     }
-
 
     private void OnEnable()
     {
@@ -67,6 +72,14 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void Update()
     {
+        // Footstep audio logic
+        footstepTimer -= Time.deltaTime;
+        if (m_moveInput.magnitude > 0.1f && footstepTimer <= 0f)
+        {
+            PlayFootstep();
+            footstepTimer = footstepInterval;
+        }
+
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         mouseWorldPos.z = transform.position.z;
 
@@ -97,6 +110,15 @@ public class PlayerInputHandler : MonoBehaviour
         if (Health <= 0)
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void PlayFootstep()
+    {
+        if (footstepClips != null && footstepClips.Length > 0 && footstepSource != null)
+        {
+            int idx = Random.Range(0, footstepClips.Length);
+            footstepSource.PlayOneShot(footstepClips[idx]);
         }
     }
 
