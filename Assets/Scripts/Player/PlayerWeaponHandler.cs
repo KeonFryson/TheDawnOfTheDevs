@@ -229,13 +229,19 @@ public class PlayerWeaponHandler : MonoBehaviour
                 break;
             case WeaponType.Laser:
                 slot.ammo--;
+                // Turn off laser visual when out of ammo
+                if (slot.ammo <= 0)
+                {
+                    if (laserLineRenderer != null)
+                        laserLineRenderer.enabled = false;
+                    isLaserActive = false;
+                }
                 break;
         }
 
         UpdateWeaponUI();
         AutoSwitchWeaponIfOutOfAmmo();
     }
-
     public void OnAttackPressed(Vector3 playerPosition)
     {
         WeaponSlot slot = weaponSlots[currentWeaponSlot];
@@ -284,6 +290,10 @@ public class PlayerWeaponHandler : MonoBehaviour
             UpdateWeaponUI();
             if (slot.ammo <= 0)
             {
+                // Turn off laser visual when out of ammo
+                if (laserLineRenderer != null)
+                    laserLineRenderer.enabled = false;
+                isLaserActive = false;
                 AutoSwitchWeaponIfOutOfAmmo();
                 yield break;
             }

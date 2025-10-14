@@ -73,7 +73,7 @@ public class PlayerInputHandler : MonoBehaviour
         if (weaponHandler.WeaponHolder != null)
         {
             Vector3 dirToMouse = (mouseWorldPos - transform.position).normalized;
-            float orbitRadius = 7.0f;
+            float orbitRadius = 4.0f;
             weaponHandler.WeaponHolder.position = transform.position + dirToMouse * orbitRadius;
 
             float angle = Mathf.Atan2(dirToMouse.y, dirToMouse.x) * Mathf.Rad2Deg;
