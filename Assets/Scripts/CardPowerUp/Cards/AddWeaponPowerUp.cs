@@ -16,12 +16,27 @@ public class AddWeaponPowerUp : PowerUp
         var handler = player.GetComponent<PlayerWeaponHandler>();
         if (handler == null) return;
 
+
+        Debug.Log($"[AddWeaponPowerUp] weaponStats: {(weaponStats != null ? weaponStats.ToString() : "null")}");
+        Debug.Log($"[AddWeaponPowerUp] weaponStats.maxClipAmmo: {(weaponStats != null ? weaponStats.maxClipAmmo : -1)}");
+        Debug.Log($"[AddWeaponPowerUp] weaponStats.maxAmmo: {(weaponStats != null ? weaponStats.maxAmmo : -1)}");
+
+
+        int clipAmmo = weaponStats != null ? weaponStats.maxClipAmmo : 100;
+        int maxClipAmmo = weaponStats != null ? weaponStats.maxClipAmmo : 100;
+        int reserveAmmo = weaponStats != null ? weaponStats.maxAmmo : 300;
+        int maxReserveAmmo = reserveAmmo;
+
+        Debug.Log($"[AddWeaponPowerUp] clipAmmo: {clipAmmo}, maxClipAmmo: {maxClipAmmo}, reserveAmmo: {reserveAmmo}, maxReserveAmmo: {maxReserveAmmo}");
+
         // Try to add weapon, returns true if added, false if already 2 weapons
         if (!handler.AddWeaponToSlots(
                 weaponType,
                 weaponPrefab,
-                weaponStats != null ? weaponStats.maxAmmo : 100,
-                weaponStats != null ? weaponStats.maxAmmo : 100,
+                clipAmmo,
+                maxClipAmmo,
+                reserveAmmo,
+                maxReserveAmmo,
                 weaponStats))
         {
             // Already have 2 weapons, prompt to remove one

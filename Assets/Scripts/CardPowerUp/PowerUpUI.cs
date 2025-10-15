@@ -198,6 +198,11 @@ public class PowerUpUI : MonoBehaviour
             Destroy(child.gameObject);
         }
 
+        // Debug weaponStats values
+        Debug.Log($"[ShowWeaponReplaceDialog] weaponStats: {(weaponStats != null ? weaponStats.ToString() : "null")}");
+        Debug.Log($"[ShowWeaponReplaceDialog] weaponStats.maxClipAmmo: {(weaponStats != null ? weaponStats.maxClipAmmo : -1)}");
+        Debug.Log($"[ShowWeaponReplaceDialog] weaponStats.maxAmmo: {(weaponStats != null ? weaponStats.maxAmmo : -1)}");
+
         for (int i = 0; i < handler.weaponSlots.Count; i++)
         {
             var weaponType = handler.weaponSlots[i].type;
@@ -207,13 +212,21 @@ public class PowerUpUI : MonoBehaviour
             var card = cardObj.GetComponent<PowerUpCard>();
             card.SetupForWeaponReplace(weaponType, () =>
             {
-                Debug.Log($"Replacing weapon in slot {slotIndex}: {weaponType} -> {newWeapon}");
+                int clipAmmo = weaponStats != null ? weaponStats.maxClipAmmo : 100;
+                int maxClipAmmo = weaponStats != null ? weaponStats.maxClipAmmo : 100;
+                int reserveAmmo = weaponStats != null ? weaponStats.maxAmmo : 300;
+                int maxReserveAmmo = reserveAmmo;
+
+                Debug.Log($"[ShowWeaponReplaceDialog] Replacing slot {slotIndex}: clipAmmo={clipAmmo}, maxClipAmmo={maxClipAmmo}, reserveAmmo={reserveAmmo}, maxReserveAmmo={maxReserveAmmo}");
+
                 handler.ReplaceWeaponInSlot(
                     slotIndex,
                     newWeapon,
                     weaponPrefab,
-                    weaponStats != null ? weaponStats.maxAmmo : 100,
-                    weaponStats != null ? weaponStats.maxAmmo : 100,
+                    clipAmmo,
+                    maxClipAmmo,
+                    reserveAmmo,
+                    maxReserveAmmo,
                     weaponStats
                 );
                 showingWeaponReplaceDialog = false;

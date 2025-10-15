@@ -23,8 +23,10 @@ public class PlayerWeaponHandler : MonoBehaviour
     {
         public WeaponType type;
         public GameObject prefab;
-        public int ammo;
-        public int maxAmmo;
+        public int clipAmmo;      // Bullets in current clip
+        public int maxClipAmmo;   // Max bullets per clip
+        public int reserveAmmo;   // Bullets in reserve
+        public int maxReserveAmmo;// Max reserve
         public WeaponStats stats;
     }
 
@@ -56,8 +58,10 @@ public class PlayerWeaponHandler : MonoBehaviour
         {
             type = WeaponType.Pistol,
             prefab = startingWeaponPrefab,
-            ammo = startingWeaponStats.maxAmmo,
-            maxAmmo = startingWeaponStats.maxAmmo,
+            clipAmmo = startingWeaponStats.maxClipAmmo,
+            maxClipAmmo = startingWeaponStats.maxClipAmmo,
+            reserveAmmo = startingWeaponStats.maxAmmo,
+            maxReserveAmmo = startingWeaponStats.maxAmmo,
             stats = startingWeaponStats
         });
 
@@ -97,19 +101,22 @@ public class PlayerWeaponHandler : MonoBehaviour
         return weaponSlots[currentWeaponSlot].type;
     }
 
-    public bool AddWeaponToSlots(WeaponType newWeapon, GameObject weaponPrefab = null, int ammo = 1, int maxAmmo = 1, WeaponStats stats = null)
+    public bool AddWeaponToSlots(WeaponType newWeapon, GameObject weaponPrefab = null, int clipAmmo = 1, int maxClipAmmo = 1, int reserveAmmo = 0, int maxReserveAmmo = 0, WeaponStats stats = null)
     {
         if (weaponSlots.Any(ws => ws.type == newWeapon))
             return false;
 
         if (weaponSlots.Count < 2)
         {
+            int clampedClipAmmo = Mathf.Min(clipAmmo, stats != null ? stats.maxClipAmmo : maxClipAmmo);
             weaponSlots.Add(new WeaponSlot
             {
                 type = newWeapon,
                 prefab = weaponPrefab,
-                ammo = ammo,
-                maxAmmo = maxAmmo,
+                clipAmmo = clampedClipAmmo,
+                maxClipAmmo = maxClipAmmo,
+                reserveAmmo = reserveAmmo,
+                maxReserveAmmo = maxReserveAmmo,
                 stats = stats
             });
             UpdateHeldWeaponVisual();
@@ -124,7 +131,7 @@ public class PlayerWeaponHandler : MonoBehaviour
         if (isReloading) return;
 
         WeaponSlot slot = weaponSlots[currentWeaponSlot];
-        if (slot.ammo == slot.maxAmmo) return; // Already full
+        if (slot.clipAmmo == slot.maxClipAmmo || slot.reserveAmmo <= 0) return; // Already full or no reserve
 
         StartCoroutine(ReloadCoroutine());
     }
@@ -137,13 +144,19 @@ public class PlayerWeaponHandler : MonoBehaviour
         yield return new WaitForSeconds(reloadTime);
 
         WeaponSlot slot = weaponSlots[currentWeaponSlot];
-        slot.ammo = slot.maxAmmo;
+        int neededAmmo = slot.maxClipAmmo - slot.clipAmmo;
+        int ammoToReload = Mathf.Min(neededAmmo, slot.reserveAmmo);
+        slot.clipAmmo += ammoToReload;
+        slot.reserveAmmo -= ammoToReload;
+
+        // Clamp clipAmmo to maxClipAmmo from stats
+        slot.clipAmmo = Mathf.Min(slot.clipAmmo, slot.stats.maxClipAmmo);
 
         isReloading = false;
         UpdateWeaponUI();
     }
 
-    public void ReplaceWeaponInSlot(int slotIndex, WeaponType newWeapon, GameObject weaponPrefab = null, int ammo = 1, int maxAmmo = 1, WeaponStats stats = null)
+    public void ReplaceWeaponInSlot(int slotIndex, WeaponType newWeapon, GameObject weaponPrefab = null, int clipAmmo = 1, int maxClipAmmo = 1, int reserveAmmo = 0, int maxReserveAmmo = 0, WeaponStats stats = null)
     {
         if (slotIndex >= 0 && slotIndex < weaponSlots.Count)
         {
@@ -151,8 +164,10 @@ public class PlayerWeaponHandler : MonoBehaviour
             {
                 type = newWeapon,
                 prefab = weaponPrefab,
-                ammo = ammo,
-                maxAmmo = maxAmmo,
+                clipAmmo = clipAmmo,
+                maxClipAmmo = maxClipAmmo,
+                reserveAmmo = reserveAmmo,
+                maxReserveAmmo = maxReserveAmmo,
                 stats = stats
             };
             UpdateHeldWeaponVisual();
@@ -181,7 +196,7 @@ public class PlayerWeaponHandler : MonoBehaviour
         if (isReloading) return;
 
         WeaponSlot slot = weaponSlots[currentWeaponSlot];
-        if (slot.ammo <= 0)
+        if (slot.clipAmmo <= 0)
         {
             AutoSwitchWeaponIfOutOfAmmo();
             return;
@@ -211,26 +226,29 @@ public class PlayerWeaponHandler : MonoBehaviour
                 var pistolBulletComponent = pistolBullet.GetComponent<Bullet>();
                 pistolBulletComponent.SetDirection(shootDir);
                 pistolBulletComponent.SetDamage(damageToSet);
-                slot.ammo--;
+                slot.clipAmmo--;
                 break;
             case WeaponType.Shotgun:
                 float spreadAngle = slot.stats != null ? slot.stats.spreadAngle : 15f;
                 int pelletCount = slot.stats != null ? slot.stats.pelletCount : 5;
                 for (int i = 0; i < pelletCount; i++)
                 {
+                    if (slot.clipAmmo <= 0)
+                        break; // Stop if out of ammo
+
                     float angle = -spreadAngle * 0.5f + spreadAngle * i / (pelletCount - 1);
                     Vector2 dir = Quaternion.Euler(0, 0, angle) * shootDir;
                     var shotgunBullet = Instantiate(shotgunBulletPrefab, fireTransform.position, fireTransform.rotation);
                     var shotgunBulletComponent = shotgunBullet.GetComponent<Bullet>();
                     shotgunBulletComponent.SetDirection(dir);
                     shotgunBulletComponent.SetDamage(damageToSet);
+                    slot.clipAmmo--;
                 }
-                slot.ammo--;
                 break;
             case WeaponType.Laser:
-                slot.ammo--;
+                slot.clipAmmo--;
                 // Turn off laser visual when out of ammo
-                if (slot.ammo <= 0)
+                if (slot.clipAmmo <= 0)
                 {
                     if (laserLineRenderer != null)
                         laserLineRenderer.enabled = false;
@@ -242,11 +260,12 @@ public class PlayerWeaponHandler : MonoBehaviour
         UpdateWeaponUI();
         AutoSwitchWeaponIfOutOfAmmo();
     }
+
     public void OnAttackPressed(Vector3 playerPosition)
     {
         WeaponSlot slot = weaponSlots[currentWeaponSlot];
         WeaponType currentWeapon = slot.type;
-        if (slot.ammo <= 0)
+        if (slot.clipAmmo <= 0)
         {
             AutoSwitchWeaponIfOutOfAmmo();
             return;
@@ -286,9 +305,9 @@ public class PlayerWeaponHandler : MonoBehaviour
         {
             FireLaser(playerPosition);
             WeaponSlot slot = weaponSlots[currentWeaponSlot];
-            slot.ammo--;
+            slot.clipAmmo--;
             UpdateWeaponUI();
-            if (slot.ammo <= 0)
+            if (slot.clipAmmo <= 0)
             {
                 // Turn off laser visual when out of ammo
                 if (laserLineRenderer != null)
@@ -381,14 +400,14 @@ public class PlayerWeaponHandler : MonoBehaviour
 
     private void AutoSwitchWeaponIfOutOfAmmo()
     {
-        if (weaponSlots[currentWeaponSlot].ammo > 0)
+        if (weaponSlots[currentWeaponSlot].clipAmmo > 0)
             return;
 
         int startSlot = currentWeaponSlot;
         int nextSlot = (currentWeaponSlot + 1) % weaponSlots.Count;
         while (nextSlot != startSlot)
         {
-            if (weaponSlots[nextSlot].ammo > 0)
+            if (weaponSlots[nextSlot].clipAmmo > 0)
             {
                 currentWeaponSlot = nextSlot;
                 UpdateHeldWeaponVisual();

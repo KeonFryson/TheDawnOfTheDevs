@@ -22,17 +22,9 @@ public class WeaponUI : MonoBehaviour
         var handler = FindFirstObjectByType<PlayerWeaponHandler>();
 
         // Main weapon display
-        if (slot.ammo <= 0)
-        {
-            weaponImage.sprite = GetWeaponSprite(slot.type);
-            currentAmmoText.text = "0";
-        }
-        else
-        {
-            weaponImage.sprite = GetWeaponSprite(slot.type);
-            currentAmmoText.text = slot.ammo.ToString();
-        }
-        maxAmmoText.text = slot.maxAmmo.ToString();
+        weaponImage.sprite = GetWeaponSprite(slot.type);
+        currentAmmoText.text = slot.clipAmmo.ToString();      // Show current clip ammo
+        maxAmmoText.text = slot.reserveAmmo.ToString();       // Show reserve ammo
 
         // Second weapon display: always show the other weapon if it exists
         if (secondWeaponImage != null && handler != null && handler.weaponSlots.Count > 1)
