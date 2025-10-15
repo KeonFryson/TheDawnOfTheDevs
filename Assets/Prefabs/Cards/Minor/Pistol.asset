@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: Assembly-CSharp::AddWeaponPowerUp
   powerUpName: Pistol
-  description: Add  Better Pistol (400 Shots)
+  description: 'Add Pistol '
   icon: {fileID: 21300010, guid: 5acb27b603af6d44ea6113c4b7b15385, type: 3}
   iconScale: {x: 1.7, y: 1}
   tier: 1
@@ -23,6 +23,7 @@ MonoBehaviour:
   weaponStats:
     damage: 4
     maxAmmo: 200
+    maxClipAmmo: 20
     fireRate: 0.5
     spreadAngle: 0
     pelletCount: 1
