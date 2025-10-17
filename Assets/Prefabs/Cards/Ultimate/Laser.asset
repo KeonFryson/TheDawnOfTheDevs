@@ -22,7 +22,8 @@ MonoBehaviour:
     type: 3}
   weaponStats:
     damage: 1
-    maxAmmo: 200
+    maxAmmo: 1000
+    maxClipAmmo: 200
     fireRate: 0.5
     spreadAngle: 0
     pelletCount: 1

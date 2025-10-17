@@ -107,7 +107,7 @@ public class RubyController : MonoBehaviour
                 NonPlayerCharacter character = hit.collider.GetComponent<NonPlayerCharacter>();
                 if (character != null)
                 {
-                    UIHandler.instance.DisplayDialog();
+                    //UIHandler.instance.DisplayDialog();
                 }  
             }
         }

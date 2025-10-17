@@ -42,6 +42,13 @@ public class PlayerInputHandler : MonoBehaviour
         m_controls.Player.Reload.performed += ctx => weaponHandler.ReloadCurrentWeapon();
     }
 
+    private void Start()
+    {
+        // Initialize UI health (use single form on UIHandler to update slider + texts)
+        if (UIHandler.instance != null)
+            UIHandler.instance.SetHealthAbsolute(Health, MaxHealth);
+    }
+
     private void OnEnable()
     {
         m_controls.Enable();
@@ -125,8 +132,14 @@ public class PlayerInputHandler : MonoBehaviour
     public void ChangeHealth(float amount)
     {
         Health = Mathf.Clamp(Health + amount, 0, MaxHealth);
+
+        if (UIHandler.instance != null)
+            UIHandler.instance.SetHealthAbsolute(Health, MaxHealth);
+
         if (Health <= 0)
         {
+            if (UIHandler.instance != null)
+                UIHandler.instance.SetHealthAbsolute(0f, MaxHealth);
             Destroy(gameObject);
         }
     }
@@ -136,8 +149,14 @@ public class PlayerInputHandler : MonoBehaviour
         MaxHealth += amount;
         MaxHealth = Mathf.Max(MaxHealth, 100f);
         Health = Mathf.Clamp(Health, 0, MaxHealth);
+
+        if (UIHandler.instance != null)
+            UIHandler.instance.SetHealthAbsolute(Health, MaxHealth);
+
         if (Health <= 0)
         {
+            if (UIHandler.instance != null)
+                UIHandler.instance.SetHealthAbsolute(0f, MaxHealth);
             Destroy(gameObject);
         }
     }

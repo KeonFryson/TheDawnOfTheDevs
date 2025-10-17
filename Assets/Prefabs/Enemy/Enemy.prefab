@@ -40,6 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2486988149274092841}
+  - component: {fileID: -6385394995232673252}
   - component: {fileID: 3799171949370312296}
   - component: {fileID: 7787195920119329320}
   - component: {fileID: 2213334352170586336}
@@ -68,6 +69,18 @@ Transform:
   - {fileID: 2149990083765924301}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-6385394995232673252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4967416884464773492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69cf80bb229f7b84eb0aff8ca13921e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusReceiverExample
 --- !u!212 &3799171949370312296
 SpriteRenderer:
   m_ObjectHideFlags: 0

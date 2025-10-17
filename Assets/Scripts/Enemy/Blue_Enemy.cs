@@ -2,6 +2,7 @@
 // Blue_Enemy.cs
 // ============================
 using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -47,6 +48,10 @@ public class Blue_Enemy : MonoBehaviour
     // === Front Marker ===
     [Header("Front Marker")]
     public Transform frontMarker; // Assign in inspector (e.g., empty GameObject or sprite)
+
+    // === Stun handling ===
+    private Coroutine stunCoroutine;
+    private bool isStunned = false;
 
     private void Awake()
     {
@@ -102,7 +107,9 @@ public class Blue_Enemy : MonoBehaviour
 
             // Always move straight toward the front (player direction)
             Vector2 moveDirection = dirToPlayer;
-            if (distance > attackRange)
+
+            // If stunned, skip movement (stay in place)
+            if (!isStunned && distance > attackRange)
             {
                 rb.MovePosition(rb.position + moveDirection.normalized * speed * Time.fixedDeltaTime);
             }
@@ -202,5 +209,23 @@ public class Blue_Enemy : MonoBehaviour
         isDead = true;
         OnDeath?.Invoke();
         Destroy(gameObject);
+    }
+
+    // Called to stun this enemy for 'seconds' seconds.
+    public void OnStunned(float seconds)
+    {
+        if (stunCoroutine != null) StopCoroutine(stunCoroutine);
+        stunCoroutine = StartCoroutine(StunRoutine(seconds));
+    }
+
+    private IEnumerator StunRoutine(float seconds)
+    {
+        isStunned = true;
+        // Optionally clear movement-related timers so dodge/attack don't advance while stunned:
+        dodgeDirection = 0;
+        dodgeTimeLeft = 0f;
+        yield return new WaitForSeconds(seconds);
+        isStunned = false;
+        stunCoroutine = null;
     }
 }

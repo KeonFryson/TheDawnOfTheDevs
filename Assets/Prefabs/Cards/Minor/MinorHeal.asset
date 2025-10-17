@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: MinorHeal
   m_EditorClassIdentifier: Assembly-CSharp::IncreaseHealthPowerUp
   powerUpName: Minor Health
-  description: Increase Heatlth by 10
+  description: Heal Heatlth by 10
   icon: {fileID: 21300000, guid: 89a7c2b9294dbaa4985085575713504f, type: 3}
+  iconScale: {x: 1, y: 1}
+  tier: 1
   healthIncrease: 10

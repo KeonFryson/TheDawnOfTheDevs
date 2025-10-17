@@ -9,5 +9,6 @@ public class MaxHealthBoost : PowerUp
     public override void Apply(PlayerInputHandler player)
     {
        player.ChangeMaxHealth(maxHealthIncrease);
+       player.ChangeHealth(maxHealthIncrease); // Heal the player by the same amount
     }
 }

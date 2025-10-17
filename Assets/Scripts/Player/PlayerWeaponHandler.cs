@@ -242,8 +242,9 @@ public class PlayerWeaponHandler : MonoBehaviour
                     var shotgunBulletComponent = shotgunBullet.GetComponent<Bullet>();
                     shotgunBulletComponent.SetDirection(dir);
                     shotgunBulletComponent.SetDamage(damageToSet);
-                    slot.clipAmmo--;
+
                 }
+                slot.clipAmmo--;
                 break;
             case WeaponType.Laser:
                 slot.clipAmmo--;
@@ -400,8 +401,16 @@ public class PlayerWeaponHandler : MonoBehaviour
 
     private void AutoSwitchWeaponIfOutOfAmmo()
     {
-        if (weaponSlots[currentWeaponSlot].clipAmmo > 0)
+        var current = weaponSlots[currentWeaponSlot];
+        if (current.reserveAmmo > 0)
+        {
+            if (current.clipAmmo <= 0)
+            {
+                Debug.Log($"AutoSwitchWeaponIfOutOfAmmo: clip empty but reserve present for {current.type}. Triggering reload instead of switch.");
+                ReloadCurrentWeapon();
+            }
             return;
+        }
 
         int startSlot = currentWeaponSlot;
         int nextSlot = (currentWeaponSlot + 1) % weaponSlots.Count;
