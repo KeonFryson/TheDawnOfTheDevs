@@ -16,6 +16,10 @@ public class WaveManager : MonoBehaviour
     [Tooltip("Delay in seconds between enemy spawns")]
     public float enemySpawnDelay = 0.5f;
 
+    [Header("Enemy Scaling")]
+    [Tooltip("Per-wave multiplier applied to enemy stats (health/speed/attackDamage)")]
+    public float enemyStrengthMultiplier = 1.12f;
+
     [Header("References")]
     public PowerUpUI powerUpUI;
 
@@ -25,6 +29,8 @@ public class WaveManager : MonoBehaviour
 
     private void Start()
     {
+        // Start a new stats session when waves start
+        GameStats.StartSession();
         StartWave();
     }
 
@@ -34,6 +40,9 @@ public class WaveManager : MonoBehaviour
         waveActive = true;
 
         currentWave++;
+        // record highest wave reached so far
+        GameStats.RecordWaveReached(currentWave);
+
         int enemyCount = Mathf.RoundToInt(baseEnemiesPerWave * Mathf.Pow(difficultyMultiplier, currentWave - 1));
         enemiesAlive = enemyCount;
 
@@ -66,7 +75,18 @@ public class WaveManager : MonoBehaviour
 
             if (enemy.TryGetComponent(out Blue_Enemy enemyScript))
             {
+                // Subscribe to death event
                 enemyScript.OnDeath += OnEnemyDeath;
+
+                // Apply per-wave scaling: raise multiplier to (currentWave - 1)
+                float waveMul = Mathf.Pow(enemyStrengthMultiplier, Mathf.Max(0, currentWave - 1));
+                enemyScript.health *= waveMul;
+                enemyScript.speed *= waveMul;
+
+                // Cap speed to a maximum (50)
+                enemyScript.speed = Mathf.Min(enemyScript.speed, 50f);
+
+                enemyScript.attackDamage *= waveMul;
             }
             else
             {

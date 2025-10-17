@@ -26,6 +26,9 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private float footstepInterval = 0.4f;
     private float footstepTimer = 0f;
 
+    // Cache LoseMenu so we can find it even if inactive
+    private LoseMenu loseMenu;
+
     private void Awake()
     {
         m_controls = new InputSystem_Actions();
@@ -40,6 +43,12 @@ public class PlayerInputHandler : MonoBehaviour
 
         m_controls.Player.SwitchWeapon.performed += ctx => weaponHandler.SwitchWeapon();
         m_controls.Player.Reload.performed += ctx => weaponHandler.ReloadCurrentWeapon();
+
+        loseMenu = FindFirstObjectByType<LoseMenu>(FindObjectsInactive.Include);
+        if (loseMenu == null)
+        {
+            Debug.LogWarning("LoseMenu not found in scene. Make sure a GameObject has the LoseMenu component and assign UI fields.");
+        }
     }
 
     private void Start()
@@ -116,6 +125,8 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (Health <= 0)
         {
+            // Use cached reference (found with includeInactive = true) to ensure menu is found
+            loseMenu?.ShowLoseMenu();
             Destroy(gameObject);
         }
     }
@@ -140,6 +151,7 @@ public class PlayerInputHandler : MonoBehaviour
         {
             if (UIHandler.instance != null)
                 UIHandler.instance.SetHealthAbsolute(0f, MaxHealth);
+            loseMenu?.ShowLoseMenu();
             Destroy(gameObject);
         }
     }
@@ -157,6 +169,7 @@ public class PlayerInputHandler : MonoBehaviour
         {
             if (UIHandler.instance != null)
                 UIHandler.instance.SetHealthAbsolute(0f, MaxHealth);
+            loseMenu?.ShowLoseMenu();
             Destroy(gameObject);
         }
     }

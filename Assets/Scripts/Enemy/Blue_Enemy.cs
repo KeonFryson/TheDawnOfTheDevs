@@ -1,6 +1,3 @@
-// ============================
-// Blue_Enemy.cs
-// ============================
 using System;
 using System.Collections;
 using UnityEngine;
@@ -10,6 +7,9 @@ public class Blue_Enemy : MonoBehaviour
 {
     public float speed = 2f;
     public float health = 20f;
+
+    // Added so damage can be scaled per-wave
+    public float attackDamage = 10f;
 
     public event Action OnDeath;
 
@@ -192,7 +192,9 @@ public class Blue_Enemy : MonoBehaviour
     public void TryAttackPlayer(PlayerInputHandler player)
     {
         if (attackTimer > 0f) return;
-        player.ChangeHealth(-10f);
+        player.ChangeHealth(-attackDamage);
+        // record that player received damage
+        GameStats.RecordDamageReceived(attackDamage);
         attackTimer = attackCooldown;
     }
 
@@ -200,6 +202,8 @@ public class Blue_Enemy : MonoBehaviour
     {
         if (isDead) return;
         health -= amount;
+        // record damage dealt by player to enemies
+        GameStats.RecordDamageDealt(amount);
         if (health <= 0f) Die();
     }
 
@@ -207,6 +211,8 @@ public class Blue_Enemy : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
+        // record enemy death/score
+        GameStats.RecordEnemyKilled();
         OnDeath?.Invoke();
         Destroy(gameObject);
     }
