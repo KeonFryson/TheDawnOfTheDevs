@@ -16,8 +16,8 @@ MonoBehaviour:
   icon: {fileID: 21300032, guid: a1d46cd3f2614cc43be92ab44ea7d819, type: 3}
   variant: 1
   fuseTime: 1
-  upwardBias: 0.5
-  throwForce: 8
+  upwardBias: 0
+  throwForce: 20
   damage: 100
   explosionRadius: 25
   explosionForce: 300

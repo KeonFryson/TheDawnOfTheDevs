@@ -105,17 +105,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba3d38b6186850e4bb4dc3ff056cde32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Grenade
-  fuseTime: 0.5
-  damage: 100
-  explosionRadius: 30
-  explosionForce: 300
-  damageLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  explosionEffect: {fileID: 6192724089161036641, guid: e17d9a3f04750764c8c0a7a0461e4c3b,
-    type: 3}
-  explosionSound: {fileID: 0}
-  effectDuration: 1.5
+  grenadeData: {fileID: 0}
+  explodeOnImpact: 1
+  impactThreshold: 6
+  fallbackFuseTime: 2
+  fallbackDamage: 25
+  fallbackRadius: 2
+  fallbackForce: 300
 --- !u!50 &-3976839543268269601
 Rigidbody2D:
   serializedVersion: 5

@@ -1,4 +1,3 @@
-
 using System;
 using System.Reflection;
 using TMPro;
@@ -21,9 +20,6 @@ public class PlayerGrenadeHandler : MonoBehaviour
     [Header("Slot Capacity")]
     public int maxPerSlot = 100;
 
-    [Header("Optional UI (assigned by WeaponUI)")]
-    public TMP_Text slot1Text;
-    public TMP_Text slot2Text;
 
     [Header("Throw / Grenade Prefab (2D)")]
     [Tooltip("Prefab must have a Rigidbody2D and a Grenade behaviour to handle fuse/explosion.")]
@@ -250,20 +246,6 @@ public class PlayerGrenadeHandler : MonoBehaviour
 
     private void UpdateUI()
     {
-        if (slot1Text != null)
-        {
-            var s = slots.Length > 0 ? $"{slots[0].count}" : "0";
-            if (slots.Length > 0 && slots[0].type != null) s += $" {slots[0].type.displayName}";
-            slot1Text.text = s;
-        }
-
-        if (slot2Text != null)
-        {
-            var s = slots.Length > 1 ? $"{slots[1].count}" : "0";
-            if (slots.Length > 1 && slots[1].type != null) s += $" {slots[1].type.displayName}";
-            slot2Text.text = s;
-        }
-
         // UI icon & selection logic
         bool slot0Has = slots.Length > 0 && slots[0].count > 0;
         bool slot1Has = slots.Length > 1 && slots[1].count > 0;
@@ -341,9 +323,12 @@ public class PlayerGrenadeHandler : MonoBehaviour
             return;
         }
 
-        Vector3 spawnPos = transform.position + Vector3.up * 0.6f;
+        // spawn position (keep z from transform to avoid depth change)
+        Vector3 spawnPos3 = transform.position + Vector3.up * 0.6f;
+        Vector2 spawnPos = new Vector2(spawnPos3.x, spawnPos3.y);
+
         if (debugLogs) Debug.Log($"Spawning grenade at {spawnPos}");
-        GameObject grenadeObj = Instantiate(grenadePrefab, spawnPos, Quaternion.identity);
+        GameObject grenadeObj = Instantiate(grenadePrefab, spawnPos3, Quaternion.identity);
         if (grenadeObj == null)
         {
             Debug.LogError("Instantiate returned null grenadeObj.");
@@ -362,26 +347,47 @@ public class PlayerGrenadeHandler : MonoBehaviour
         Rigidbody2D rb = grenadeObj.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            // Throw toward mouse world position (2D)
-            Vector3 mouseWorldPos;
+            // Compute mouse world position correctly for 2D (use camera distance to world plane)
+            Vector2 mouseWorldPos2;
             if (Mouse.current != null)
             {
                 Vector2 mousePos = Mouse.current.position.ReadValue();
-                mouseWorldPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Mathf.Abs(Camera.main.transform.position.z)));
+                float camZ = -Camera.main.transform.position.z; // distance from camera to world z=0 plane
+                Vector3 mp3 = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, camZ));
+                mouseWorldPos2 = new Vector2(mp3.x, mp3.y);
             }
             else
             {
-                mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector3 mp3 = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
+                mouseWorldPos2 = new Vector2(mp3.x, mp3.y);
             }
 
-            mouseWorldPos.z = spawnPos.z;
-            Vector2 dir = ((Vector2)(mouseWorldPos - spawnPos)).normalized;
-            dir = (dir + (Vector2.up * upwardBias)).normalized; // small arc bias
+            // Direction from spawn to mouse (2D)
+            Vector2 dir = (mouseWorldPos2 - spawnPos);
+            if (dir.sqrMagnitude < 0.001f)
+            {
+                // If mouse is too close to spawn, default to player's forward/up
+                dir = Vector2.up;
+            }
+            dir = dir.normalized;
 
-            rb.AddForce(dir * throwForce, ForceMode2D.Impulse);
+            // Apply upward bias from GrenadeData if present, otherwise use handler's upwardBias
+            float useUpBias = chosenType != null ? chosenType.upwardBias : upwardBias;
+            dir = (dir + Vector2.up * useUpBias).normalized;
 
-            if (debugLogs) Debug.Log($"Applied force {dir * throwForce} to grenade (rb mass {rb.mass})");
-            Debug.DrawRay(spawnPos, dir * 1.5f, Color.green, 2f);
+            // Use the grenade-specific throwForce if available, otherwise fallback to PlayerGrenadeHandler.throwForce
+            float appliedForce = (chosenType != null ? chosenType.throwForce : throwForce);
+
+            // Ensure Rigidbody2D is dynamic and simulated, then set velocity directly for deterministic throw behaviour
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.simulated = true;
+            rb.linearVelocity = dir * appliedForce;
+
+            // Optional: add a small random angular spin to make throw look organic
+            rb.angularVelocity = UnityEngine.Random.Range(-360f, 360f);
+
+            if (debugLogs) Debug.Log($"Set grenade velocity to {rb.linearVelocity} (dir {dir}, appliedForce {appliedForce}, rb mass {rb.mass})");
+            Debug.DrawRay(spawnPos3, new Vector3(dir.x, dir.y, 0f) * 1.5f, Color.green, 2f);
         }
         else
         {

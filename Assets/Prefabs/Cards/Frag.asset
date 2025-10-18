@@ -17,7 +17,7 @@ MonoBehaviour:
   variant: 0
   fuseTime: 1
   upwardBias: 0.5
-  throwForce: 7.33
+  throwForce: 20
   damage: 100
   explosionRadius: 25
   explosionForce: 300

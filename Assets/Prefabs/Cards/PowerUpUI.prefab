@@ -31,10 +31,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6647247902864862054}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -600, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5233814543658077022
 MonoBehaviour:
@@ -54,8 +54,8 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
+  m_Spacing: 10
+  m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
@@ -178,17 +178,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpUI
   availablePowerUps:
-  - {fileID: 11400000, guid: c2bfd7f938c5b784ea797ddea010c4d8, type: 2}
-  - {fileID: 11400000, guid: 237205afbe4eb8f41b0ce2d6b769614b, type: 2}
-  - {fileID: 11400000, guid: 1aa413ea65187e04b9fc545c9eeffe61, type: 2}
-  - {fileID: 11400000, guid: 68043a636cd00a542804b891577c0e19, type: 2}
-  - {fileID: 11400000, guid: 52382260360a78f41a3f21c1d70b6aa2, type: 2}
-  - {fileID: 11400000, guid: b9c543bd75711214db7dd89697cc3d92, type: 2}
-  - {fileID: 11400000, guid: 8edb918a975bf6b4aa940419e60ccbfa, type: 2}
   - {fileID: 11400000, guid: aafbdf379a5223647ac769bff04c4ac3, type: 2}
-  - {fileID: 11400000, guid: da7b6cc72fa0ee349b3538015bf200f2, type: 2}
+  - {fileID: 11400000, guid: c2bfd7f938c5b784ea797ddea010c4d8, type: 2}
+  - {fileID: 11400000, guid: 52382260360a78f41a3f21c1d70b6aa2, type: 2}
+  - {fileID: 11400000, guid: 246556adfd8307045bfc1aef288f743d, type: 2}
   - {fileID: 11400000, guid: cfbc1aede05d78b46a1753f791784c8e, type: 2}
+  - {fileID: 11400000, guid: da7b6cc72fa0ee349b3538015bf200f2, type: 2}
+  - {fileID: 11400000, guid: 1aa413ea65187e04b9fc545c9eeffe61, type: 2}
+  - {fileID: 11400000, guid: b9c543bd75711214db7dd89697cc3d92, type: 2}
+  - {fileID: 11400000, guid: 237205afbe4eb8f41b0ce2d6b769614b, type: 2}
+  - {fileID: 11400000, guid: 8edb918a975bf6b4aa940419e60ccbfa, type: 2}
+  - {fileID: 11400000, guid: 68043a636cd00a542804b891577c0e19, type: 2}
   - {fileID: 11400000, guid: c42fd43e5f3a7254eb035fd8c4149a1b, type: 2}
+  - {fileID: 11400000, guid: f774cbd33fc4a404487dfd6b488ed51b, type: 2}
+  - {fileID: 11400000, guid: 47b9e8edcb656f14f845a82e918ca307, type: 2}
   cardPrefab: {fileID: 7225154114503169896, guid: 9713c6ab58645934bb5ab56b4e565bed,
     type: 3}
   cardParent: {fileID: 6596733440861566331}

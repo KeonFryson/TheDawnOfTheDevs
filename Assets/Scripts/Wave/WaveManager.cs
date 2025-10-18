@@ -80,13 +80,19 @@ public class WaveManager : MonoBehaviour
 
                 // Apply per-wave scaling: raise multiplier to (currentWave - 1)
                 float waveMul = Mathf.Pow(enemyStrengthMultiplier, Mathf.Max(0, currentWave - 1));
+
                 enemyScript.health *= waveMul;
                 enemyScript.speed *= waveMul;
 
-                // Cap speed to a maximum (50)
-                enemyScript.speed = Mathf.Min(enemyScript.speed, 50f);
+                // Round scaled values to whole numbers
+                enemyScript.health = Mathf.Round(enemyScript.health);
+                enemyScript.speed = Mathf.Round(enemyScript.speed);
+
+                // Cap speed to a maximum (45)
+                enemyScript.speed = Mathf.Min(enemyScript.speed, 45f);
 
                 enemyScript.attackDamage *= waveMul;
+                enemyScript.attackDamage = Mathf.Round(enemyScript.attackDamage);
             }
             else
             {
