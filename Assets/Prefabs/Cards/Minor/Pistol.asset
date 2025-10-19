@@ -15,7 +15,7 @@ MonoBehaviour:
   powerUpName: Pistol
   description: 'Add Pistol '
   icon: {fileID: 21300010, guid: 5acb27b603af6d44ea6113c4b7b15385, type: 3}
-  iconScale: {x: 1.7, y: 1}
+  iconScale: {x: 1, y: 1}
   tier: 1
   weaponType: 0
   weaponPrefab: {fileID: 5733896515360075826, guid: 73aad9c17226fff40aa2b3f302d3efc2,

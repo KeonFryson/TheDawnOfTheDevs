@@ -1,7 +1,10 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static PlayerWeaponHandler;
+using UnityEngine.InputSystem;
 
 public class PlayerWeaponHandler : MonoBehaviour
 {
@@ -101,6 +104,53 @@ public class PlayerWeaponHandler : MonoBehaviour
         return weaponSlots[currentWeaponSlot].type;
     }
 
+    // New: expose current weapon slot index so other systems can target a specific slot
+    public int GetCurrentWeaponSlot()
+    {
+        return Mathf.Clamp(currentWeaponSlot, 0, Mathf.Max(0, weaponSlots.Count - 1));
+    }
+
+    // New: increase max reserve and add the same amount to reserve for a specific slot by percent
+    public void IncreaseMaxReserveForSlot(int slotIndex, int percentIncrease)
+    {
+        if (slotIndex < 0 || slotIndex >= weaponSlots.Count) return;
+        if (percentIncrease <= 0) return;
+
+        var slot = weaponSlots[slotIndex];
+        if (slot == null) return;
+
+        int maxIncrease = Mathf.RoundToInt(slot.maxReserveAmmo * (percentIncrease / 100f));
+        if (maxIncrease <= 0) return;
+
+        int beforeMax = slot.maxReserveAmmo;
+        int beforeReserve = slot.reserveAmmo;
+
+        slot.maxReserveAmmo = beforeMax + maxIncrease;
+        slot.reserveAmmo = Mathf.Min(beforeReserve + maxIncrease, slot.maxReserveAmmo);
+
+        Debug.Log($"[PlayerWeaponHandler] Slot {slotIndex} ({slot.type}) maxReserve increased by {maxIncrease}: {slot.reserveAmmo}/{slot.maxReserveAmmo}");
+
+        UpdateWeaponUI();
+    }
+
+    // Updated: open the card-based UI if present; otherwise apply to current slot immediately.
+    // Removed numeric/key selection coroutine to avoid keyboard-number based selection.
+    public void PromptPlayerChooseSlotForAmmo(int percentIncrease)
+    {
+        // Prefer UI selection when available
+        var ui = FindFirstObjectByType<PowerUpUI>();
+        if (ui != null)
+        {
+            ui.ShowAmmoSlotSelection(this, percentIncrease);
+            return;
+        }
+
+        // Fallback: no UI present -> apply to current slot immediately
+        int current = GetCurrentWeaponSlot();
+        Debug.Log($"[PlayerWeaponHandler] PowerUpUI not found. Applying +{percentIncrease}% to current slot {current}.");
+        IncreaseMaxReserveForSlot(current, percentIncrease);
+    }
+
     public bool AddWeaponToSlots(WeaponType newWeapon, GameObject weaponPrefab = null, int clipAmmo = 1, int maxClipAmmo = 1, int reserveAmmo = 0, int maxReserveAmmo = 0, WeaponStats stats = null)
     {
         if (weaponSlots.Any(ws => ws.type == newWeapon))
@@ -183,7 +233,7 @@ public class PlayerWeaponHandler : MonoBehaviour
             currentHeldWeaponInstance = null;
         }
 
-        WeaponSlot slot = weaponSlots.Count > currentWeaponSlot ? weaponSlots[currentWeaponSlot] : null;
+        WeaponSlot slot = weaponSlots.Count > currentWeaponSlot ?  weaponSlots[currentWeaponSlot] : null;
         if (slot != null && slot.prefab != null && weaponHolder != null)
         {
             currentHeldWeaponInstance = Instantiate(slot.prefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
@@ -402,9 +452,12 @@ public class PlayerWeaponHandler : MonoBehaviour
     private void AutoSwitchWeaponIfOutOfAmmo()
     {
         var current = weaponSlots[currentWeaponSlot];
-        if (current.reserveAmmo > 0)
+
+        // Only switch when BOTH current clip ammo and reserve ammo are zero.
+        // If clip is empty but reserve exists, reload instead and do not switch.
+        if (current.clipAmmo > 0 || current.reserveAmmo > 0)
         {
-            if (current.clipAmmo <= 0)
+            if (current.clipAmmo <= 0 && current.reserveAmmo > 0)
             {
                 Debug.Log($"AutoSwitchWeaponIfOutOfAmmo: clip empty but reserve present for {current.type}. Triggering reload instead of switch.");
                 ReloadCurrentWeapon();
@@ -412,6 +465,7 @@ public class PlayerWeaponHandler : MonoBehaviour
             return;
         }
 
+        // At this point both clipAmmo == 0 and reserveAmmo == 0 -> try to find another slot with clip ammo.
         int startSlot = currentWeaponSlot;
         int nextSlot = (currentWeaponSlot + 1) % weaponSlots.Count;
         while (nextSlot != startSlot)
@@ -425,6 +479,6 @@ public class PlayerWeaponHandler : MonoBehaviour
             }
             nextSlot = (nextSlot + 1) % weaponSlots.Count;
         }
-        // If all weapons are out of ammo, you can show a UI or play a sound here
+        // No other slot has clip ammo; do not force a switch to an empty weapon.
     }
 }

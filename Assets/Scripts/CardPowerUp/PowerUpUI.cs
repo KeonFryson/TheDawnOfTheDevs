@@ -62,13 +62,22 @@ public class PowerUpUI : MonoBehaviour
         int cardCount = Mathf.Min(3, availablePowerUps.Length);
         Debug.Log($"Calculated cardCount: {cardCount}");
 
+        // Filter out weapon power-ups for weapons the player already has
+        PowerUp[] filteredPool = availablePowerUps.Where(p => ShouldIncludePowerUp(p)).ToArray();
+        if (filteredPool.Length == 0)
+        {
+            // If nothing left after filtering, fall back to original pool to avoid blocking the flow
+            filteredPool = availablePowerUps;
+            Debug.Log("All power-ups filtered out (e.g. duplicate weapons). Falling back to full pool.");
+        }
+
         List<PowerUp> chosen = new();
 
         // Weighted random selection (no duplicates)
         int attempts = 0;
         while (chosen.Count < cardCount && attempts < 100)
         {
-            var selected = GetWeightedRandomPowerUp();
+            var selected = GetWeightedRandomPowerUp(filteredPool);
             attempts++;
             if (selected != null && !chosen.Contains(selected))
             {
@@ -106,24 +115,55 @@ public class PowerUpUI : MonoBehaviour
             player.SetInputEnabled(false);
     }
 
-    private PowerUp GetWeightedRandomPowerUp()
+    private PowerUp GetWeightedRandomPowerUp(PowerUp[] pool)
     {
-        // Group power-ups by tier
-        var grouped = availablePowerUps.GroupBy(p => p.tier).ToDictionary(g => g.Key, g => g.ToList());
+        if (pool == null || pool.Length == 0)
+            return null;
+
+        // Group power-ups by tier using the provided pool
+        var grouped = pool.GroupBy(p => p.tier).ToDictionary(g => g.Key, g => g.ToList());
 
         // Build weighted list
         List<PowerUp> weightedList = new();
         foreach (var kvp in grouped)
         {
-            int count = Mathf.CeilToInt(kvp.Value.Count * tierWeights[kvp.Key] * 100);
+            int count = Mathf.CeilToInt(kvp.Value.Count * tierWeights.GetValueOrDefault(kvp.Key, 0f) * 100);
             for (int i = 0; i < count; i++)
                 weightedList.Add(kvp.Value[Random.Range(0, kvp.Value.Count)]);
         }
 
         if (weightedList.Count == 0)
-            return availablePowerUps[Random.Range(0, availablePowerUps.Length)];
+            return pool[Random.Range(0, pool.Length)];
 
         return weightedList[Random.Range(0, weightedList.Count)];
+    }
+
+    // New helper: determine whether a power-up should be offered to the player
+    private bool ShouldIncludePowerUp(PowerUp p)
+    {
+        if (p == null)
+            return false;
+
+        // If it's an AddWeaponPowerUp, don't include it if player already has that weapon type in any slot
+        if (p is AddWeaponPowerUp addWeaponPU && player != null)
+        {
+            var handler = player.GetComponent<PlayerWeaponHandler>();
+            if (handler != null)
+            {
+                foreach (var slot in handler.weaponSlots)
+                {
+                    // Guard for null slot entries just in case
+                    if (slot != null && slot.type == addWeaponPU.weaponType)
+                    {
+                        Debug.Log($"Excluding weapon power-up {addWeaponPU.weaponType} because player already has it in a slot.");
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // Default: include
+        return true;
     }
 
     private void OnCardSelected(PowerUp powerUp)
@@ -238,5 +278,52 @@ public class PowerUpUI : MonoBehaviour
         cardInputBlockUntil = Time.unscaledTime + cardInputBlockTime;
 
         Debug.Log("ShowWeaponReplaceDialog finished.");
+    }
+
+    // New: Show selectable cards for each weapon slot to apply ammo increase
+    public void ShowAmmoSlotSelection(PlayerWeaponHandler handler, int percentIncrease)
+    {
+        if (handler == null)
+            return;
+
+        showingWeaponReplaceDialog = true;
+        Debug.Log($"ShowAmmoSlotSelection called. +{percentIncrease}% to selected slot.");
+
+        // Wait one frame before pausing and disabling input
+        StartCoroutine(PauseAfterFrame());
+
+        // Destroy any existing cards
+        foreach (Transform child in cardParent)
+        {
+            Debug.Log($"Destroying card: {child.gameObject.name}");
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < handler.weaponSlots.Count; i++)
+        {
+            int slotIndex = i; // capture
+            var slot = handler.weaponSlots[i];
+            var cardObj = Instantiate(cardPrefab, cardParent);
+            var card = cardObj.GetComponent<PowerUpCard>();
+            card.SetupForAmmoSlot(
+                slotIndex,
+                slot != null ? slot.type : PlayerWeaponHandler.WeaponType.Pistol,
+                slot != null ? slot.reserveAmmo : 0,
+                slot != null ? slot.maxReserveAmmo : 0,
+                percentIncrease,
+                () =>
+                {
+                    Debug.Log($"[ShowAmmoSlotSelection] Applying +{percentIncrease}% to slot {slotIndex}");
+                    handler.IncreaseMaxReserveForSlot(slotIndex, percentIncrease);
+                    showingWeaponReplaceDialog = false;
+                    StartCoroutine(HideAndContinue());
+                }
+            );
+        }
+
+        // Block input for a short time to prevent accidental selection
+        cardInputBlockUntil = Time.unscaledTime + cardInputBlockTime;
+
+        Debug.Log("ShowAmmoSlotSelection finished.");
     }
 }

@@ -3,7 +3,9 @@
 // ============================
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WaveManager : MonoBehaviour
 {
@@ -27,6 +29,18 @@ public class WaveManager : MonoBehaviour
     private int enemiesAlive = 0;
     private bool waveActive = false;
 
+    [Header("Wave Number Display")]
+    public TMP_Text waveNumberText;
+    public Image waveNumberImage;
+    [Tooltip("Seconds the wave number stays fully visible before fading")]
+    public float waveDisplayDuration = 2f;
+    [Tooltip("Seconds taken to fade out the wave number UI")]
+    public float waveFadeDuration = 1f;
+
+    private Coroutine waveDisplayCoroutine;
+    // Flag used to let callers wait until the display coroutine finishes
+    private bool waveNumberDisplayDone = true;
+
     private void Start()
     {
         // Start a new stats session when waves start
@@ -40,6 +54,11 @@ public class WaveManager : MonoBehaviour
         waveActive = true;
 
         currentWave++;
+        if (waveNumberText != null)
+        {
+            waveNumberText.text = $"Wave {currentWave}";
+        }
+
         // record highest wave reached so far
         GameStats.RecordWaveReached(currentWave);
 
@@ -54,8 +73,105 @@ public class WaveManager : MonoBehaviour
             (shuffledSpawns[i], shuffledSpawns[swapIdx]) = (shuffledSpawns[swapIdx], shuffledSpawns[i]);
         }
 
+        // Start the wave routine that shows the wave UI, waits until it is gone, then spawns enemies
+        StartCoroutine(StartWaveRoutine(enemyCount, shuffledSpawns));
+        Debug.Log($"Wave {currentWave} started with {enemyCount} enemies (spawning will begin after wave UI hides).");
+    }
+
+    // Orchestrates display -> wait -> spawn
+    private IEnumerator StartWaveRoutine(int enemyCount, List<Transform> shuffledSpawns)
+    {
+        // Show wave number text + image and start hide/fade coroutine
+        StartWaveNumberDisplay();
+
+        // Wait until the display coroutine signals completion
+        yield return new WaitUntil(() => waveNumberDisplayDone);
+
+        // Now begin spawning enemies
         StartCoroutine(SpawnEnemiesCoroutine(enemyCount, shuffledSpawns));
-        Debug.Log($"Wave {currentWave} started with {enemyCount} enemies.");
+    }
+
+    private void StartWaveNumberDisplay()
+    {
+        if (waveNumberText == null && waveNumberImage == null)
+        {
+            // Nothing to show; ensure flag is set so StartWaveRoutine won't wait forever
+            waveNumberDisplayDone = true;
+            return;
+        }
+
+        // Stop any running display coroutine so it restarts cleanly each wave
+        if (waveDisplayCoroutine != null)
+        {
+            StopCoroutine(waveDisplayCoroutine);
+            waveDisplayCoroutine = null;
+        }
+
+        waveNumberDisplayDone = false;
+        waveDisplayCoroutine = StartCoroutine(WaveNumberDisplayCoroutine());
+    }
+
+    private IEnumerator WaveNumberDisplayCoroutine()
+    {
+        // Ensure visible and fully opaque
+        if (waveNumberText != null)
+        {
+            waveNumberText.gameObject.SetActive(true);
+            Color c = waveNumberText.color;
+            c.a = 1f;
+            waveNumberText.color = c;
+        }
+        if (waveNumberImage != null)
+        {
+            waveNumberImage.gameObject.SetActive(true);
+            Color ci = waveNumberImage.color;
+            ci.a = 1f;
+            waveNumberImage.color = ci;
+        }
+
+        // Stay visible for configured duration
+        yield return new WaitForSeconds(Mathf.Max(0f, waveDisplayDuration));
+
+        // Fade out over configured duration
+        float elapsed = 0f;
+        float fadeDur = Mathf.Max(0.001f, waveFadeDuration);
+        while (elapsed < fadeDur)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDur);
+            if (waveNumberText != null)
+            {
+                Color c = waveNumberText.color;
+                c.a = alpha;
+                waveNumberText.color = c;
+            }
+            if (waveNumberImage != null)
+            {
+                Color ci = waveNumberImage.color;
+                ci.a = alpha;
+                waveNumberImage.color = ci;
+            }
+            yield return null;
+        }
+
+        // Ensure fully hidden and optionally deactivate GameObjects
+        if (waveNumberText != null)
+        {
+            Color c = waveNumberText.color;
+            c.a = 0f;
+            waveNumberText.color = c;
+            waveNumberText.gameObject.SetActive(false);
+        }
+        if (waveNumberImage != null)
+        {
+            Color ci = waveNumberImage.color;
+            ci.a = 0f;
+            waveNumberImage.color = ci;
+            waveNumberImage.gameObject.SetActive(false);
+        }
+
+        waveDisplayCoroutine = null;
+        waveNumberDisplayDone = true;
     }
 
     private IEnumerator SpawnEnemiesCoroutine(int enemyCount, List<Transform> shuffledSpawns)

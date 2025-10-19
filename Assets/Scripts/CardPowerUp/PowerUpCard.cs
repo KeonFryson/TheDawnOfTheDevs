@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -84,6 +85,26 @@ public class PowerUpCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         this.onSelected = _ => onSelected?.Invoke();
 
         Debug.Log($"[PowerUpCard] SetupForWeaponReplace called for weaponType: {weaponType}");
+    }
+
+    // New: Setup for ammo slot selection
+    public void SetupForAmmoSlot(int slotIndex, PlayerWeaponHandler.WeaponType weaponType, int reserveAmmo, int maxReserveAmmo, int percentIncrease, System.Action onSelected)
+    {
+        if (icon != null)
+        {
+            icon.sprite = GetWeaponTypeIcon(weaponType);
+            icon.transform.localScale = new Vector3(GetWeaponTypeIconScale(weaponType).x, GetWeaponTypeIconScale(weaponType).y, 1f);
+        }
+
+        if (nameText != null) nameText.text = $"Slot {slotIndex + 1}: {weaponType}";
+        if (descriptionText != null) descriptionText.text = $"Reserve: {reserveAmmo}/{maxReserveAmmo}\nClick to apply +{percentIncrease}% reserve max to this slot.";
+        if (tierTextTop != null) tierTextTop.text = "";
+        if (tierTexTBottom != null) tierTexTBottom.text = "";
+
+        this.powerUp = null;
+        this.onSelected = _ => onSelected?.Invoke();
+
+        Debug.Log($"[PowerUpCard] SetupForAmmoSlot called for slot {slotIndex}, weapon {weaponType}, reserve {reserveAmmo}/{maxReserveAmmo}, +{percentIncrease}%");
     }
 
     // Called by UI button
