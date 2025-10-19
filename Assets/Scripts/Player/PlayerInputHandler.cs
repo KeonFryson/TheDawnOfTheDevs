@@ -35,6 +35,8 @@ public class PlayerInputHandler : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;
 
+       
+
         m_controls.Player.Move.performed += ctx => m_moveInput = ctx.ReadValue<Vector2>();
         m_controls.Player.Move.canceled += ctx => m_moveInput = Vector2.zero;
 
@@ -95,6 +97,13 @@ public class PlayerInputHandler : MonoBehaviour
             PlayFootstep();
             footstepTimer = footstepInterval;
         }
+
+        if (Time.timeScale == 0f)
+        {
+            m_controls.Disable();
+            return;
+        }
+        else { m_controls.Enable(); }
 
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         mouseWorldPos.z = transform.position.z;

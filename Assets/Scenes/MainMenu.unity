@@ -791,11 +791,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 18628840314120528, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 284300894173498674, guid: 674fd96f224624e4b88b699d47168519,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -816,97 +811,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 347487825725729022, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.73
-      objectReference: {fileID: 0}
-    - target: {fileID: 347487825725729022, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 347487825725729022, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 377
-      objectReference: {fileID: 0}
-    - target: {fileID: 347487825725729022, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 347487825725729022, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -11.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 347487825725729022, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -291
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171464038286940920, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_text
-      value: Isekei Studio
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171464038286940920, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_fontSize
-      value: 69.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3230040614110886837, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 208
-      objectReference: {fileID: 0}
-    - target: {fileID: 3230040614110886837, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -542.9844
-      objectReference: {fileID: 0}
-    - target: {fileID: 4129340445333646734, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_text
-      value: 'Keon Fryson
-
-        Jesse
-
-
-        Miguel Cintra
-
-
-
-        Julia
-        Samborski '
-      objectReference: {fileID: 0}
-    - target: {fileID: 4129340445333646734, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_margin.z
-      value: -274.9984
-      objectReference: {fileID: 0}
-    - target: {fileID: 4163551008053439552, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 4163551008053439552, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 4238292399399344077, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 7304771213975343406, guid: 81a0025e80983b7408102d232b49dd44,
-        type: 3}
-    - target: {fileID: 4562980932446240133, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 006b5a6056f3c674daab68fae2c2f79d, type: 2}
     - target: {fileID: 5015119370185899877, guid: 674fd96f224624e4b88b699d47168519,
         type: 3}
       propertyPath: m_Name
@@ -962,24 +866,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5286522520370951706, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_text
-      value: 'Programmers
-
-
-
-        Music
-
-
-
-        Artist '
-      objectReference: {fileID: 0}
-    - target: {fileID: 5286522520370951706, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_margin.x
-      value: -239.5145
-      objectReference: {fileID: 0}
     - target: {fileID: 5417173674719394719, guid: 674fd96f224624e4b88b699d47168519,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1018,26 +904,6 @@ PrefabInstance:
     - target: {fileID: 5481942350674383216, guid: 674fd96f224624e4b88b699d47168519,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5997842742670797686, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 123
-      objectReference: {fileID: 0}
-    - target: {fileID: 6403233089536663656, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -542.9844
-      objectReference: {fileID: 0}
-    - target: {fileID: 6970625416789258860, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7303730432975071861, guid: 674fd96f224624e4b88b699d47168519,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

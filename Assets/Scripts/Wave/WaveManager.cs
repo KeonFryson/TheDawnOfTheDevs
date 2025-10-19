@@ -1,6 +1,4 @@
-// ============================
-// WaveManager.cs
-// ============================
+
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -24,6 +22,15 @@ public class WaveManager : MonoBehaviour
 
     [Header("References")]
     public PowerUpUI powerUpUI;
+
+    // Audio for wave completion
+    [Header("Audio")]
+    [Tooltip("Optional AudioSource to play the wave completion sound.")]
+    public AudioSource audioSource;
+    [Tooltip("Clips played when a wave is completed (all enemies defeated). One of these will be chosen at random).")]
+    public AudioClip[] waveCompleteClips;
+    [Range(0f, 1f)]
+    public float waveCompleteVolume = 1f;
 
     private int currentWave = 0;
     private int enemiesAlive = 0;
@@ -225,6 +232,25 @@ public class WaveManager : MonoBehaviour
         if (enemiesAlive <= 0)
         {
             waveActive = false;
+
+            // Play one of the configured wave completion clips (choose randomly)
+            if (waveCompleteClips != null && waveCompleteClips.Length > 0)
+            {
+                AudioClip clipToPlay = waveCompleteClips[Random.Range(0, waveCompleteClips.Length)];
+                if (clipToPlay != null)
+                {
+                    if (audioSource != null)
+                    {
+                        audioSource.PlayOneShot(clipToPlay, waveCompleteVolume);
+                    }
+                    else
+                    {
+                        Vector3 pos = Camera.main != null ? Camera.main.transform.position : Vector3.zero;
+                        AudioSource.PlayClipAtPoint(clipToPlay, pos, waveCompleteVolume);
+                    }
+                }
+            }
+
             ShowPowerUpCards();
         }
     }
