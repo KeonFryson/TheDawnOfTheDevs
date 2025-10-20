@@ -43,7 +43,7 @@ public class Blue_Enemy : MonoBehaviour
     [Header("Obstacle Avoidance")]
     public float obstacleAvoidanceRadius = 1.2f;
     public float obstacleAvoidanceStrength = 2.0f;
-    public LayerMask obstacleLayerMask = 0; // Assign in inspector (e.g. "Obstacles")
+    public LayerMask obstacleLayerMask = ~0; // default to all layers (will be cleaned in Awake)
 
     // === Front Marker ===
     [Header("Front Marker")]
@@ -59,6 +59,22 @@ public class Blue_Enemy : MonoBehaviour
         rb.freezeRotation = true; // Prevent spinning
         timer = changeDirTimer;
         dodgeTimer = UnityEngine.Random.Range(0, dodgeInterval); // Stagger dodges
+
+        // If inspector left mask at default (0) or user didn't assign, default to all layers
+        // then clear Player and Enemy layers if they exist so those are not treated as obstacles.
+        int mask = obstacleLayerMask.value;
+        if (mask == 0)
+            mask = ~0; // all layers
+
+        int playerLayer = LayerMask.NameToLayer("Player");
+        if (playerLayer != -1)
+            mask &= ~(1 << playerLayer);
+
+        int enemyLayer = LayerMask.NameToLayer("Enemy");
+        if (enemyLayer != -1)
+            mask &= ~(1 << enemyLayer);
+
+        obstacleLayerMask.value = mask;
     }
 
     private void FixedUpdate()
@@ -103,15 +119,35 @@ public class Blue_Enemy : MonoBehaviour
             Vector2 obstacleAvoidance = CalculateObstacleAvoidance();
 
             // Combine movement: toward player + dodge + separation + obstacle avoidance
-            Vector2 move = dirToPlayer + dodgeOffset + separation * separationStrength + obstacleAvoidance * obstacleAvoidanceStrength;
+            Vector2 combinedMove = dirToPlayer + dodgeOffset + separation * separationStrength + obstacleAvoidance * obstacleAvoidanceStrength;
 
-            // Always move straight toward the front (player direction)
-            Vector2 moveDirection = dirToPlayer;
+            // Use the combined move vector for actual motion (was only using direct player direction before,
+            // which caused the enemy to push into obstacles and get stuck).
+            Vector2 desiredMove = combinedMove.sqrMagnitude > 0.0001f ? combinedMove.normalized : dirToPlayer;
+
+            // --- Simple collision check ahead and slide along obstacle normal if blocked ---
+            // This helps the enemy not get stuck when a direct move would collide with an obstacle.
+            Vector2 finalMoveDir = desiredMove;
+            Collider2D ownCol = GetComponent<Collider2D>();
+            float castRadius = ownCol != null ? Mathf.Max(ownCol.bounds.extents.x, ownCol.bounds.extents.y) : 0.25f;
+            float castDistance = speed * Time.fixedDeltaTime + 0.01f;
+            RaycastHit2D hit = Physics2D.CircleCast(rb.position, castRadius, desiredMove, castDistance, obstacleLayerMask);
+            if (hit.collider != null)
+            {
+                // Slide along the obstacle surface: project movement onto tangent
+                Vector2 tangent = new Vector2(-hit.normal.y, hit.normal.x);
+                float alongTangent = Vector2.Dot(desiredMove, tangent);
+                // if tangent contributes, prefer sliding; otherwise try slight away from obstacle
+                if (Mathf.Abs(alongTangent) > 0.01f)
+                    finalMoveDir = tangent.normalized * Mathf.Sign(alongTangent);
+                else
+                    finalMoveDir = (desiredMove + hit.normal * 0.6f).normalized;
+            }
 
             // If stunned, skip movement (stay in place)
             if (!isStunned && distance > attackRange)
             {
-                rb.MovePosition(rb.position + moveDirection.normalized * speed * Time.fixedDeltaTime);
+                rb.MovePosition(rb.position + finalMoveDir * speed * Time.fixedDeltaTime);
             }
 
             // Position and rotate the triangle in front of the enemy
@@ -156,13 +192,21 @@ public class Blue_Enemy : MonoBehaviour
         Collider2D[] obstacles = Physics2D.OverlapCircleAll(rb.position, obstacleAvoidanceRadius, obstacleLayerMask);
         foreach (var obs in obstacles)
         {
-            if (obs.gameObject != this.gameObject)
-            {
-                Vector2 away = (rb.position - (Vector2)obs.transform.position);
-                float dist = away.magnitude;
-                if (dist > 0)
-                    avoidance += away / dist; // Weighted by distance
-            }
+            if (obs.gameObject == this.gameObject)
+                continue;
+
+            // Ignore any collider that belongs to the player (including tail child colliders)
+            if (obs.GetComponentInParent<PlayerInputHandler>() != null)
+                continue;
+
+            // Ignore trigger colliders (they shouldn't block movement)
+            if (obs.isTrigger)
+                continue;
+
+            Vector2 away = (rb.position - (Vector2)obs.transform.position);
+            float dist = away.magnitude;
+            if (dist > 0)
+                avoidance += away / dist; // Weighted by distance
         }
         return avoidance;
     }
@@ -180,6 +224,12 @@ public class Blue_Enemy : MonoBehaviour
             // If no marker, draw a default line forward
             Gizmos.color = Color.cyan;
             Gizmos.DrawLine(transform.position, transform.position + transform.up * 1.0f);
+        }
+
+        if (obstacleAvoidanceRadius > 0f)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, obstacleAvoidanceRadius);
         }
     }
 

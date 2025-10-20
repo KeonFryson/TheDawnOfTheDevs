@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Blue_Enemy
   speed: 30
   health: 20
+  attackDamage: 10
   attackRange: 4
   attackCooldown: 1
   separationRadius: 3.5
@@ -162,11 +163,11 @@ MonoBehaviour:
   dodgeInterval: 2.5
   dodgeDuration: 0.4
   dodgeStrength: 1.2
-  obstacleAvoidanceRadius: 3.5
-  obstacleAvoidanceStrength: 2
+  obstacleAvoidanceRadius: 5
+  obstacleAvoidanceStrength: 4
   obstacleLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 128
   frontMarker: {fileID: 597389345705538910}
 --- !u!58 &2213334352170586336
 CircleCollider2D:
