@@ -1,3 +1,4 @@
+
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,6 +13,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     [SerializeField] Animator Animator;
     [SerializeField] SpriteRenderer SpriteRenderer;
+    [SerializeField] private float animatorSpeedMultiplier = 1f; // new: scale the Speed param sent to the Animator
     private Vector2 m_moveInput;
     private InputSystem_Actions m_controls;
 
@@ -35,7 +37,7 @@ public class PlayerInputHandler : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;
 
-       
+
 
         m_controls.Player.Move.performed += ctx => m_moveInput = ctx.ReadValue<Vector2>();
         m_controls.Player.Move.canceled += ctx => m_moveInput = Vector2.zero;
@@ -105,6 +107,24 @@ public class PlayerInputHandler : MonoBehaviour
         }
         else { m_controls.Enable(); }
 
+        // --- Animator updates (directional + speed) ---
+        // Sets parameters the Animator can use to transition between Idle, BackWalk, FrontWalk, LeftRightWalk.
+        // Add these parameters to your Animator:
+        //   Float: MoveX, MoveY, Speed
+        //   Bool: BackWalk, FrontWalk, LeftRightWalk  (optional)
+        if (Animator != null)
+        {
+            Animator.SetFloat("MoveX", m_moveInput.x);
+            Animator.SetFloat("MoveY", m_moveInput.y);
+
+            // Calculate movement magnitude
+            float moveAmount = m_moveInput.magnitude;
+
+            // Set blend tree speed parameter (scaled by animatorSpeedMultiplier)
+            Animator.SetFloat("Speed", moveAmount * animatorSpeedMultiplier);
+        }
+
+        // --- Weapon aiming logic ---
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         mouseWorldPos.z = transform.position.z;
 
@@ -129,6 +149,7 @@ public class PlayerInputHandler : MonoBehaviour
 
             weaponHandler.WeaponHolder.rotation = Quaternion.Euler(0, 0, angle - 180);
         }
+
 
         weaponHandler.UpdateLaserVisual(transform.position);
 

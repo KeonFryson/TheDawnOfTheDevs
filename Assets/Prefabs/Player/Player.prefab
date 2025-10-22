@@ -289,6 +289,7 @@ MonoBehaviour:
   MaxHealth: 100
   Animator: {fileID: 1427196716225932965}
   SpriteRenderer: {fileID: 4300234745163368669}
+  animatorSpeedMultiplier: 0.2
   weaponHandler: {fileID: 7642581937252532264}
   footstepClips:
   - {fileID: 8300000, guid: 90f32cc28420c5c478d64e2eaa7af7c4, type: 3}
