@@ -166305,21 +166305,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1427196716225932965, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 0d357b2a4cff016449f59c1e4ca6d8a0, type: 2}
-    - target: {fileID: 3573927072250530388, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3573927072250530388, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 3573927072250530388, guid: 5d3fc2a61681947458099e6d2e0d7031,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -166370,66 +166355,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4300234745163368669, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_FlipX
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4300234745163368669, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_FlipY
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4300234745163368669, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 0.875
-      objectReference: {fileID: 0}
-    - target: {fileID: 4300234745163368669, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4300234745163368669, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -9115938624207856695, guid: e23747b0cf73a7f4b957f2b06209f423,
-        type: 3}
-    - target: {fileID: 4300234745163368669, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4300234745163368669, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4300234745163368669, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4300234745163368669, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5326923312711275667, guid: 5d3fc2a61681947458099e6d2e0d7031,
         type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7835450994513698115, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: BaseSpeed
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 7835450994513698115, guid: 5d3fc2a61681947458099e6d2e0d7031,
-        type: 3}
-      propertyPath: animatorSpeedMultiplier
-      value: 0.11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -166600,7 +166529,7 @@ PrefabInstance:
     - target: {fileID: 7003833624229336912, guid: 6667305266aec6b41b28c0fe2b97ca2a,
         type: 3}
       propertyPath: baseEnemiesPerWave
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7003833624229336912, guid: 6667305266aec6b41b28c0fe2b97ca2a,
         type: 3}

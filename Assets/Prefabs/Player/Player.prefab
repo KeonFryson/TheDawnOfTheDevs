@@ -225,13 +225,13 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b,
+  m_Sprite: {fileID: -9115938624207856695, guid: e23747b0cf73a7f4b957f2b06209f423,
     type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.875, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -289,7 +289,7 @@ MonoBehaviour:
   MaxHealth: 100
   Animator: {fileID: 1427196716225932965}
   SpriteRenderer: {fileID: 4300234745163368669}
-  animatorSpeedMultiplier: 0.2
+  animatorSpeedMultiplier: 0.11
   weaponHandler: {fileID: 7642581937252532264}
   footstepClips:
   - {fileID: 8300000, guid: 90f32cc28420c5c478d64e2eaa7af7c4, type: 3}
@@ -359,7 +359,7 @@ Animator:
   m_GameObject: {fileID: 5326923312711275667}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0d357b2a4cff016449f59c1e4ca6d8a0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
