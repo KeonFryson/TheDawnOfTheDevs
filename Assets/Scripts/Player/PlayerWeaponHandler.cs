@@ -53,9 +53,11 @@ public class PlayerWeaponHandler : MonoBehaviour
     private bool isReloading = false;
     [SerializeField] private float reloadTime = 1.5f;
 
+    private WeaponUI weaponUI;
     private void Awake()
     {
         currentDamage = baseDamage;
+        weaponUI = FindFirstObjectByType<WeaponUI>();
 
         weaponSlots.Add(new WeaponSlot
         {
@@ -190,6 +192,7 @@ public class PlayerWeaponHandler : MonoBehaviour
     {
         isReloading = true;
         // play reload animation or sound here
+        weaponUI.ReloadingTxt.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(reloadTime);
 
@@ -201,7 +204,7 @@ public class PlayerWeaponHandler : MonoBehaviour
 
         // Clamp clipAmmo to maxClipAmmo from stats
         slot.clipAmmo = Mathf.Min(slot.clipAmmo, slot.stats.maxClipAmmo);
-
+        weaponUI.ReloadingTxt.gameObject.SetActive(false);
         isReloading = false;
         UpdateWeaponUI();
     }
@@ -428,7 +431,7 @@ public class PlayerWeaponHandler : MonoBehaviour
 
     public void UpdateWeaponUI()
     {
-        var weaponUI = FindFirstObjectByType<WeaponUI>();
+        
         if (weaponUI != null)
         {
             weaponUI.UpdateWeaponDisplay(weaponSlots[currentWeaponSlot]);

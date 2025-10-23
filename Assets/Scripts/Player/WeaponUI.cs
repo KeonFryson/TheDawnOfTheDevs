@@ -24,6 +24,7 @@ public class WeaponUI : MonoBehaviour
     public Image grenadeIcon2;
     public TMP_Text grenadeText2;
     public TMP_Text ControlGrenade;
+    public TMP_Text ReloadingTxt;
 
 
 

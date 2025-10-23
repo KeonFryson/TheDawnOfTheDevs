@@ -33,8 +33,10 @@ public class WaveManager : MonoBehaviour
     public float waveCompleteVolume = 1f;
 
     private int currentWave = 0;
-    private int enemiesAlive = 0;
+    public int enemiesAlive = 0;
     private bool waveActive = false;
+
+    public TMP_Text NumberOFEnemies;
 
     [Header("Wave Number Display")]
     public TMP_Text waveNumberText;
@@ -47,6 +49,15 @@ public class WaveManager : MonoBehaviour
     private Coroutine waveDisplayCoroutine;
     // Flag used to let callers wait until the display coroutine finishes
     private bool waveNumberDisplayDone = true;
+
+
+    public void Update()
+    {
+        if (NumberOFEnemies != null)
+        {
+            NumberOFEnemies.text = enemiesAlive.ToString();
+        }
+    }
 
     private void Start()
     {
