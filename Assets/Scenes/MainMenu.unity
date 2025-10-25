@@ -791,6 +791,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 18628840314120528, guid: 674fd96f224624e4b88b699d47168519,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 284300894173498674, guid: 674fd96f224624e4b88b699d47168519,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -811,6 +816,34 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 347487825725729022, guid: 674fd96f224624e4b88b699d47168519,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 247
+      objectReference: {fileID: 0}
+    - target: {fileID: 3230040614110886837, guid: 674fd96f224624e4b88b699d47168519,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 4129340445333646734, guid: 674fd96f224624e4b88b699d47168519,
+        type: 3}
+      propertyPath: m_text
+      value: "Keon Fryson\nJesse\n\nMiguel Cintra\n\n\nJulia Samborski  \n\nHit Impact
+        Effects FREE By Travis Game Assets\nSprite muzzle flashes By bestgamekits\nFPS
+        Icons Pack  By Infima Games \nBasic RPG Icons By PONETI\nPixel Guns By Amir
+        Ali Kameli \nGame Input Controller Icons Free By Amanz\n\n\n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4129340445333646734, guid: 674fd96f224624e4b88b699d47168519,
+        type: 3}
+      propertyPath: m_margin.z
+      value: -1247.2051
+      objectReference: {fileID: 0}
+    - target: {fileID: 4163551008053439552, guid: 674fd96f224624e4b88b699d47168519,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 259
+      objectReference: {fileID: 0}
     - target: {fileID: 5015119370185899877, guid: 674fd96f224624e4b88b699d47168519,
         type: 3}
       propertyPath: m_Name
@@ -819,7 +852,7 @@ PrefabInstance:
     - target: {fileID: 5094067461255750824, guid: 674fd96f224624e4b88b699d47168519,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.97004
+      value: 167
       objectReference: {fileID: 0}
     - target: {fileID: 5094067461255750824, guid: 674fd96f224624e4b88b699d47168519,
         type: 3}
@@ -866,6 +899,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5286522520370951706, guid: 674fd96f224624e4b88b699d47168519,
+        type: 3}
+      propertyPath: m_text
+      value: "Programmers\n\n\nMusic\n\n\nArtist  \n\nStore Assets"
+      objectReference: {fileID: 0}
     - target: {fileID: 5417173674719394719, guid: 674fd96f224624e4b88b699d47168519,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -886,6 +924,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5438661063850677879, guid: 674fd96f224624e4b88b699d47168519,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -268
+      objectReference: {fileID: 0}
     - target: {fileID: 5481942350674383216, guid: 674fd96f224624e4b88b699d47168519,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -904,6 +947,21 @@ PrefabInstance:
     - target: {fileID: 5481942350674383216, guid: 674fd96f224624e4b88b699d47168519,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5997842742670797686, guid: 674fd96f224624e4b88b699d47168519,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 122.99951
+      objectReference: {fileID: 0}
+    - target: {fileID: 6403233089536663656, guid: 674fd96f224624e4b88b699d47168519,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -326
+      objectReference: {fileID: 0}
+    - target: {fileID: 7303730432975071861, guid: 674fd96f224624e4b88b699d47168519,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
