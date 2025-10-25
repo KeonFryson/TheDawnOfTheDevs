@@ -832,7 +832,8 @@ PrefabInstance:
       value: "Keon Fryson\nJesse\n\nMiguel Cintra\n\n\nJulia Samborski  \n\nHit Impact
         Effects FREE By Travis Game Assets\nSprite muzzle flashes By bestgamekits\nFPS
         Icons Pack  By Infima Games \nBasic RPG Icons By PONETI\nPixel Guns By Amir
-        Ali Kameli \nGame Input Controller Icons Free By Amanz\n\n\n"
+        Ali Kameli \nGame Input Controller Icons Free By Amanz\nPixel Art Top Down
+        By Canios\r\nFree Japanese City Game Assets By Gutty Kreum\n\n\n"
       objectReference: {fileID: 0}
     - target: {fileID: 4129340445333646734, guid: 674fd96f224624e4b88b699d47168519,
         type: 3}
