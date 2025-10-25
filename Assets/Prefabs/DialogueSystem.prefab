@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1329643001390361565
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1038330763360812008}
+  - component: {fileID: 8736459682096645426}
+  m_Layer: 0
+  m_Name: DialogueSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1038330763360812008
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329643001390361565}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1582.6185, y: 292.81396, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8736459682096645426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329643001390361565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 685b797368a572648bf03133743fc836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueManager
+  nameText: {fileID: 0}
+  dialogueText: {fileID: 0}
+  dialogueGroup: {fileID: 0}
+  typingSpeed: 0.03
+  nextScene: 0
+  dialogueLines:
+  - speakerName: Hale
+    text: "Another long night\u2026 another case the city forgot about."
+    displayTime: 3
+  - speakerName: Hale
+    text: Five victims. All with the same mark. They called it the Hollow Point Killings.
+    displayTime: 4
+  - speakerName: Hale
+    text: "But no one ever found where it started\u2026 until tonight."
+    displayTime: 3
+  - speakerName: Hale
+    text: "Signal came from somewhere out here. Middle of nowhere\u2026 figures."
+    displayTime: 3
+  - speakerName: Hale
+    text: If the coordinates are right, the trail ends near an old cave system.
+    displayTime: 3
+  - speakerName: Hale
+    text: "Alright\u2026 let\u2019s see what you\u2019re hiding."
+    displayTime: 2
+  - speakerName: Hale
+    text: "Looks like someone\u2019s been down here recently\u2026"
+    displayTime: 3
+  - speakerName: Hale
+    text: "What was that\u2026?"
+    displayTime: 2
+  - speakerName: Hale
+    text: "\u2026Guess I\u2019m not alone."
+    displayTime: 3
+  - speakerName: Hale
+    text: "Alright then. Let\u2019s dance."
+    displayTime: 2
+  timelineDirector: {fileID: 0}

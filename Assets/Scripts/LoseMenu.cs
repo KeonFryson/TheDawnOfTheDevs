@@ -16,6 +16,8 @@ public class LoseMenu : MonoBehaviour
     public TMP_Text timeSurvivedText;
     public Button resetButton;
     public Button menuButton;
+    [SerializeField] private AudioClip LoseSound;
+    [SerializeField] private AudioSource LoseSoundSource;
 
     private void Awake()
     {
@@ -27,6 +29,8 @@ public class LoseMenu : MonoBehaviour
     // Call this to show the lose menu (records final stats, pauses time)
     public void ShowLoseMenu()
     {
+        LoseSoundSource.PlayOneShot(LoseSound);
+
         var summary = GameStats.EndSession();
 
         if (canvasRoot != null) canvasRoot.SetActive(true);

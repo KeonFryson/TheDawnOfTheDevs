@@ -67,7 +67,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ae278c68f0cfa8f46becfb2f986dfa95, type: 3}
   - {fileID: 8300000, guid: 16c5becaf208433458d37071215d7c22, type: 3}
   - {fileID: 8300000, guid: 41f1f5945f2430243a0bc3108791ecbf, type: 3}
-  waveCompleteVolume: 1
+  waveCompleteVolume: 0.2
+  enemiesAlive: 0
+  NumberOFEnemies: {fileID: 0}
   waveNumberText: {fileID: 0}
   waveNumberImage: {fileID: 0}
   waveDisplayDuration: 1
@@ -150,6 +152,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 0}
   pauseMenuParent: {fileID: 0}
   Settings: {fileID: 0}
+  Controls: {fileID: 0}
 --- !u!82 &9209332518449076973
 AudioSource:
   m_ObjectHideFlags: 0

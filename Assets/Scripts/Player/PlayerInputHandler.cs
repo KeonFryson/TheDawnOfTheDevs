@@ -157,6 +157,7 @@ public class PlayerInputHandler : MonoBehaviour
         {
             // Use cached reference (found with includeInactive = true) to ensure menu is found
             loseMenu?.ShowLoseMenu();
+
             Destroy(gameObject);
         }
     }

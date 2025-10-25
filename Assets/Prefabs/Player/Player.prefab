@@ -264,6 +264,11 @@ MonoBehaviour:
     pelletCount: 1
     range: 10
   baseDamage: 5
+  SingleShootSound: {fileID: 8300000, guid: d55d0d8294be3754a98566957350539b, type: 3}
+  ShotGunShootSound: {fileID: 8300000, guid: 2659cce3ecf87e3499a7dac018f23cdb, type: 3}
+  SingleReloadSound: {fileID: 8300000, guid: a04a381d55305404f9052dda9e4d8a79, type: 3}
+  ShotGunReloadSound: {fileID: 8300000, guid: 93e2ae5ed60f91241ad1c5d346cc8874, type: 3}
+  WeaponAudio: {fileID: 3806935995324720592}
   weaponSlots: []
   weaponHolder: {fileID: 6067856222326053573}
   muzzleFlashPrefab: {fileID: 3014425226719090773, guid: 7b913a9edd15750479b2ef564a28e1e9,
@@ -421,7 +426,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0

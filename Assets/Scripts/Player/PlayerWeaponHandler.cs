@@ -21,6 +21,22 @@ public class PlayerWeaponHandler : MonoBehaviour
     [SerializeField] private int baseDamage = 1;
     private int currentDamage;
 
+    [SerializeField] public AudioClip SingleShootSound;
+    
+    [SerializeField] public AudioClip ShotGunShootSound;
+    [SerializeField] public AudioClip SingleReloadSound;
+    [SerializeField] public AudioClip ShotGunReloadSound;
+    [SerializeField] public AudioSource WeaponAudio;
+
+    [Range(0f, 1f)]
+    public float SingleShootSoundVolume = 1f;
+    [Range(0f, 1f)]
+    public float ShotGunShootSoundVolume = 1f;
+    [Range(0f, 1f)]
+    public float SingleReloadSoundVolume = 1f;
+    [Range(0f, 5f)]
+    public float ShotGunReloadSoundVolume = 1f;
+
     [System.Serializable]
     public class WeaponSlot
     {
@@ -192,11 +208,25 @@ public class PlayerWeaponHandler : MonoBehaviour
     {
         isReloading = true;
         // play reload animation or sound here
+        WeaponSlot slot = weaponSlots[currentWeaponSlot];
+
+        if (WeaponAudio != null)
+        {
+           
+            if (slot.type == WeaponType.Pistol && SingleReloadSound != null)
+            {
+                WeaponAudio.PlayOneShot(SingleReloadSound,SingleReloadSoundVolume);
+            }
+            else if (slot.type == WeaponType.Shotgun && ShotGunReloadSound != null)
+            {
+                WeaponAudio.PlayOneShot(ShotGunReloadSound,ShotGunReloadSoundVolume * 2f);
+            }
+        }
+
         weaponUI.ReloadingTxt.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(reloadTime);
 
-        WeaponSlot slot = weaponSlots[currentWeaponSlot];
         int neededAmmo = slot.maxClipAmmo - slot.clipAmmo;
         int ammoToReload = Mathf.Min(neededAmmo, slot.reserveAmmo);
         slot.clipAmmo += ammoToReload;
@@ -277,6 +307,7 @@ public class PlayerWeaponHandler : MonoBehaviour
             case WeaponType.Pistol:
                 var pistolBullet = Instantiate(pistolBulletPrefab, fireTransform.position, fireTransform.rotation);
                 var pistolBulletComponent = pistolBullet.GetComponent<Bullet>();
+               
                 pistolBulletComponent.SetDirection(shootDir);
                 pistolBulletComponent.SetDamage(damageToSet);
                 slot.clipAmmo--;
@@ -309,6 +340,22 @@ public class PlayerWeaponHandler : MonoBehaviour
                     isLaserActive = false;
                 }
                 break;
+
+        }
+
+        if (currentWeapon == WeaponType.Pistol)
+        {
+            if (WeaponAudio != null && SingleShootSound != null)
+            {
+                WeaponAudio.PlayOneShot(SingleShootSound, SingleShootSoundVolume);
+            }
+        }
+        else if (currentWeapon == WeaponType.Shotgun)
+        {
+            if (WeaponAudio != null && ShotGunShootSound != null)
+            {
+                WeaponAudio.PlayOneShot(ShotGunShootSound, ShotGunShootSoundVolume);
+            }
         }
 
         UpdateWeaponUI();
