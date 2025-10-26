@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Frag
   m_EditorClassIdentifier: Assembly-CSharp::GrenadeData
   displayName: Grenade
-  icon: {fileID: 21300020, guid: a1d46cd3f2614cc43be92ab44ea7d819, type: 3}
+  icon: {fileID: 21300020, guid: 5163ae49a0de665458bba61cd20c99b1, type: 3}
   variant: 0
   fuseTime: 1
   upwardBias: 0.5

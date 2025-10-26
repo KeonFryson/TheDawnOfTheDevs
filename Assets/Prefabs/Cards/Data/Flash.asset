@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Flash
   m_EditorClassIdentifier: Assembly-CSharp::GrenadeData
   displayName: Grenade
-  icon: {fileID: 21300032, guid: a1d46cd3f2614cc43be92ab44ea7d819, type: 3}
+  icon: {fileID: 21300034, guid: 5163ae49a0de665458bba61cd20c99b1, type: 3}
   variant: 1
   fuseTime: 1
   upwardBias: 0.5
