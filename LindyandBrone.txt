@@ -1,0 +1,201 @@
+(LINDY and BRONE are tabloid journalists at "UNITED UNEXPLAINED," A National Enquirer-esque hoax magazine. Lindy exposed a corporate conspiracy of some family member when she was an amateur journalist as a teen, but ended up inadvertently black-balling herself -- forever tieing herslef thus is unliked enough to get stuck at UNITED UNEXPLAINED, and is absolutely desperate to find something real to get
+out of it. BRONE is more laidback, and kind of accepts what he's in as the rotten work it is. I mean, he's going by BRONE, his life is not doing alright. He's kind of in denial about what they're looking in for more personal reasons, and is mildly annoyed his cohort is a little more into the chase.)
+
+Also he's infected in this scene because I'm running out of time to actually implement gameplay mechanics.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(Title Screen)
+
+(Fade-In)
+
+...
+
+BRONE: ...You sure you don't wanna...take another angle with this story?
+
+BRONE: I'm sure the "Fly in the Pie Dinery" would offer a favorable, vaguely collectivist perspective on what is otherwise...
+
+LINDY: ...The gross capitalization of a localized tragedy?
+
+BRONE: It's novel. It's a novelty. 
+
+BRONE: That's the "United Unexplained" way.
+
+BRONE: Roswell has its Area 51, New Jersey has its devils, and apparently Wiken, Illinois has the...
+
+BRONE: Missing...bug...child experiments.
+
+BRONE: ...And I guess we're reporting on them all.
+
+BRONE: Thus explaining the unexplained.
+
+LINDY: ...
+
+BRONE: I hear it, I hear it.
+
+BRONE: But the Chupacabra sounds just as stupid when you describe it as "Mexican Goat-Sucker."
+
+LINDY: It's a town-wide conspiracy to torture these grieving families! 
+
+LINDY: Which there are SEVERAL...
+
+LINDY: ...OF!
+
+BRONE: If they were really so against it to begin with, this narrative that makes it so hard for them to cope -- 
+
+BRONE: That after a period of their children degenerating in health, and forced to be removed from school, they were whisked away from their beds, right under their very noses...
+
+BRONE: ...Also happen to be the "mutant" "insect" "hybrids" that 40 odd people just so happen to see in the woods, 
+
+BRONE: At night.
+
+BRONE: Out of the corner of your eye.
+
+BRONE: By the light of but a flickering campfire?
+
+BRONE: And letting these two disparate ideas get THIS intertwined to begin with?
+
+BRONE: For novelty restaurants and plushies?
+
+BRONE: The royalties would have to be worth more than the settlement they'd get in court.
+
+LINDY: Look, it's undeniable it's not your "typical" message-board theory-crafting. It has at least enough community support to facilitate half a dozen tourist traps and gift shops...
+
+LINDY: Unless that diner was just trying to set our expectations low.
+
+BRONE: I mean, you hope it's a miracle, but probably not.
+
+BRONE: Probably something...worse.
+
+BRONE: But if it's so enthusiastically co-signed, why point out the elephant in the room?
+
+BRONE: It's like going to a haunted house to remind the ghosts that they died tragically.
+
+BRONE: You know.
+
+BRONE: If you believed in ghosts.
+
+LINDY: ...
+
+BRONE: Wait, do you really?
+
+LINDY: ...I don't think this is the place to ask me that.
+
+BRONE: Ah, "right time, wrong place" -- the story of my life.
+
+LINDY: Eugh.
+
+BRONE: What do you mean "eugh?"
+
+LINDY: Eugh!
+
+LINDY: ...
+
+BRONE: ...
+
+LINDY: Look, if I just said that I'd hate to lock myself in as the "corporate conspiracy" journalist and leave it that, alright?
+
+BRONE: What if you just have a niche?
+
+LINDY: What if I hate redundancy?
+
+BRONE: Oh come on, If you got it, flaunt it.
+
+BRONE: And by "it," I mean
+
+BRONE: "Your skill at discovering local businesses connections to organized crime through beloved and trusted community figures."
+
+LINDY: ...
+
+LINDY: And you'd really rather just sit inside and eat pie for three hours?
+
+BRONE: I'm saying that there are people who have made it their living to have unique experiences involving like, eating gold, or going to a new country, or...skydiving and...
+
+BRONE: ...I chose "conspiracy tabloid reporter."
+
+BRONE: ...
+
+BRONE: ...And sometimes, that sort of thing makes you think.
+
+LINDY: ...
+
+LINDY: Would you like me to dri-
+
+BRONE: I don't need you to drive.
+
+LINDY: ...
+
+BRONE: ...
+
+LINDY: ...
+
+BRONE: Stop looking at me.
+
+LINDY: Sorry.
+
+BRONE: ...
+
+BRONE: ...
+
+LINDY: So...it's not just the na-
+
+BRONE: It's not just name.
+
+LINDY: ...
+
+LINDY: There are...in the pies.
+
+BRONE: Flies, it sounds like.
+
+LINDY: ...
+
+LINDY: Is that even allowed?
+
+BRONE: It's not like you're surprised.
+
+LINDY: How many?
+
+BRONE: Well now why ruin the surprise that's left?
+
+LINDY: ...
+
+BRONE: I mean, I'm sure there's options.
+
+BRONE: Maybe like, an "Old Lady Who Swallowed A Fly" Pie where it's like,
+
+BRONE: only one fly, 
+
+BRONE: but then they have to chase that with like, seven other escalating pies, so, I assume it can't be very filling. More like a quiche, than a pie.
+
+LINDY: ...Wha-?
+
+BRONE: Or maybe, like, a chocolate chip pie, where it's a whole game of Russian Roulette between the flies and the chocolate chips, where you can't tell which slice has what until you take a bite
+
+BRONE: And you feel it crunch under your tee..teeth....
+
+LINDY: ...Are...are you fu-...
+
+LINDY: ...
+
+LINDY: I mean...
+
+LINDY: And you're...fine with this?
+
+BRONE: It's all ash eventually.
+
+LINDY: ...
+
+BRONE: It is beneath us until we are beneath it.
+
+BRONE: And the lucky ones in-between sift through them both barely understanding the sprawl beyond the hundreds and hundreds of holes they've filled.
+
+BRONE: And they're better for it.
+
+BRONE: Sometimes it's better to NOT LOOK.
+
+LINDY: ...
+
+LINDY: I see.
+
+BRONE: No, you don't.
+
+LINDY: ...No I don't.
