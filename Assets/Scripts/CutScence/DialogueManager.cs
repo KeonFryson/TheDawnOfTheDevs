@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.Playables;
+using UnityEngine.InputSystem;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -44,8 +45,15 @@ public class DialogueManager : MonoBehaviour
     {
         if (dialogueGroup != null)
             dialogueGroup.alpha = 1;
+    }
 
-       
+    void Update()
+    {
+        // Press space to skip the cutscene / dialogue
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            SkipCutscene();
+        }
     }
 
     public IEnumerator PlayDialogue()
@@ -114,5 +122,34 @@ public class DialogueManager : MonoBehaviour
             if (Camera.main != null) pos = Camera.main.transform.position;
             AudioSource.PlayClipAtPoint(line.clip, pos);
         }
+    }
+
+    // Stops timeline & dialogue and immediately loads the next scene
+    public void SkipCutscene()
+    {
+        // Stop timeline if it's playing
+        if (timelineDirector != null && timelineDirector.state == PlayState.Playing)
+        {
+            timelineDirector.Stop();
+        }
+
+        // Stop dialogue coroutine(s)
+        StopAllCoroutines();
+        dialoguePlaying = false;
+
+        // Stop any playing audio on the assigned audio source
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+        }
+
+        // Optionally hide/fade UI immediately
+        if (dialogueGroup != null)
+        {
+            dialogueGroup.alpha = 0f;
+        }
+
+        // Load the next scene immediately
+        SceneManager.LoadScene(nextScene);
     }
 }

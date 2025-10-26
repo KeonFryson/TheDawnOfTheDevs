@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(AudioSource))]
 public class Blue_Enemy : MonoBehaviour
 {
     public float speed = 2f;
@@ -53,12 +54,31 @@ public class Blue_Enemy : MonoBehaviour
     private Coroutine stunCoroutine;
     private bool isStunned = false;
 
+    // === Ambient sound ===
+    [Header("Ambient Sound")]
+    public AudioSource ambientAudioSource;
+    public AudioClip[] ambientClips;
+    public float minAmbientInterval = 5f;
+    public float maxAmbientInterval = 12f;
+    [Range(0f, 1f)]
+    public float ambientVolume = 1f;
+    private float ambientTimer = 0f;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true; // Prevent spinning
         timer = changeDirTimer;
         dodgeTimer = UnityEngine.Random.Range(0, dodgeInterval); // Stagger dodges
+
+        // AudioSource setup (RequireComponent ensures one exists, but be defensive)
+        if (ambientAudioSource == null)
+            ambientAudioSource = GetComponent<AudioSource>();
+        if (ambientAudioSource == null)
+            ambientAudioSource = gameObject.AddComponent<AudioSource>();
+
+        // Seed first ambient sound time
+        ambientTimer = UnityEngine.Random.Range(minAmbientInterval, maxAmbientInterval);
 
         // If inspector left mask at default (0) or user didn't assign, default to all layers
         // then clear Player and Enemy layers if they exist so those are not treated as obstacles.
@@ -237,6 +257,20 @@ public class Blue_Enemy : MonoBehaviour
     {
         if (isDead) return;
         attackTimer -= Time.deltaTime;
+
+        // Ambient sound timer
+        if (!isStunned && ambientClips != null && ambientClips.Length > 0 && ambientAudioSource != null)
+        {
+            ambientTimer -= Time.deltaTime;
+            if (ambientTimer <= 0f)
+            {
+                AudioClip clip = ambientClips[UnityEngine.Random.Range(0, ambientClips.Length)];
+                if (clip != null)
+                    ambientAudioSource.PlayOneShot(clip, ambientVolume);
+
+                ambientTimer = UnityEngine.Random.Range(minAmbientInterval, maxAmbientInterval);
+            }
+        }
     }
 
     public void TryAttackPlayer(PlayerInputHandler player)
@@ -284,4 +318,4 @@ public class Blue_Enemy : MonoBehaviour
         isStunned = false;
         stunCoroutine = null;
     }
-}
+}   

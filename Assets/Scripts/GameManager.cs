@@ -6,12 +6,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject pauseMenuParent;
     [SerializeField] private GameObject Settings;
     [SerializeField] private GameObject Controls;
+    
     //private InventoryMenu inventoryMenuComponent;
 
     private GameObject currentActiveMenu;
     private void Start()
     {
         HideAllMenus();
+       
 
     }
 

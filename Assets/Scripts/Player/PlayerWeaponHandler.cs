@@ -88,8 +88,8 @@ public class PlayerWeaponHandler : MonoBehaviour
 
         if (laserLineRenderer != null)
         {
-            laserLineRenderer.startWidth = 2f;
-            laserLineRenderer.endWidth = 2f;
+            laserLineRenderer.startWidth = 0.5f;
+            laserLineRenderer.endWidth = 1f;
             Gradient gradient = new Gradient();
             gradient.SetKeys(
                 new GradientColorKey[] {
