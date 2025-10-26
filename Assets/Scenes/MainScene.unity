@@ -158449,8 +158449,12 @@ PrefabInstance:
         type: 3}
       propertyPath: slots.Array.data[0].type
       value: 
-      objectReference: {fileID: 11400000, guid: 64f9d2e7d4e53b148aec0fde1a15b1dc,
-        type: 2}
+      objectReference: {fileID: 0}
+    - target: {fileID: 3259098562182416474, guid: 5d3fc2a61681947458099e6d2e0d7031,
+        type: 3}
+      propertyPath: slots.Array.data[0].count
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3573927072250530388, guid: 5d3fc2a61681947458099e6d2e0d7031,
         type: 3}
       propertyPath: m_LocalPosition.x
