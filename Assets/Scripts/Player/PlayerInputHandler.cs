@@ -30,7 +30,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     // Cache LoseMenu so we can find it even if inactive
     private LoseMenu loseMenu;
-
+    public float orbitRadius;
     private void Awake()
     {
         m_controls = new InputSystem_Actions();
@@ -131,7 +131,8 @@ public class PlayerInputHandler : MonoBehaviour
         if (weaponHandler.WeaponHolder != null)
         {
             Vector3 dirToMouse = (mouseWorldPos - transform.position).normalized;
-            float orbitRadius = 4.0f;
+            
+
             weaponHandler.WeaponHolder.position = transform.position + dirToMouse * orbitRadius;
 
             float angle = Mathf.Atan2(dirToMouse.y, dirToMouse.x) * Mathf.Rad2Deg;

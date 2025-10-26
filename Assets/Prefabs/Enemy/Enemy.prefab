@@ -62,7 +62,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -12.81069, y: -10.00238, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 597389345705538910}
@@ -152,22 +152,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb0a58f0c3e64d4c80805b6da542b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Blue_Enemy
-  speed: 45
+  speed: 5
   health: 20
   attackDamage: 10
-  attackRange: 4
+  attackRange: 1
   attackCooldown: 1
-  separationRadius: 3.5
-  separationStrength: 2
+  separationRadius: 1
+  separationStrength: 0.5
   attackTriangle: {fileID: 2149990083765924301}
   dodgeInterval: 2.5
   dodgeDuration: 0.4
   dodgeStrength: 1.2
-  obstacleAvoidanceRadius: 5
-  obstacleAvoidanceStrength: 4
+  obstacleAvoidanceRadius: 1
+  obstacleAvoidanceStrength: 2
   obstacleLayerMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 64
   frontMarker: {fileID: 597389345705538910}
 --- !u!58 &2213334352170586336
 CircleCollider2D:
@@ -227,7 +227,7 @@ Rigidbody2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0

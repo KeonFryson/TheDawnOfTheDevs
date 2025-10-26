@@ -67,19 +67,19 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 34
+  field of view: 60
   orthographic: 1
-  orthographic size: 40
-  m_Depth: -1
+  orthographic size: 5
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 0
+  m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 0
+  m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 0
@@ -172,7 +172,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1, y: 1, z: -10}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 628790367867721662}
@@ -271,7 +271,7 @@ MonoBehaviour:
   ShotGunReloadSound: {fileID: 8300000, guid: 93e2ae5ed60f91241ad1c5d346cc8874, type: 3}
   WeaponAudio: {fileID: 7593675358074139815}
   SingleShootSoundVolume: 1
-  ShotGunShootSoundVolume: 0.5
+  ShotGunShootSoundVolume: 0.2
   SingleReloadSoundVolume: 1
   ShotGunReloadSoundVolume: 1
   weaponSlots: []
@@ -294,7 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08ffb9eec3ad499458f503a78fc65f30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
-  BaseSpeed: 50
+  BaseSpeed: 10
   Health: 100
   MaxHealth: 100
   Animator: {fileID: 1427196716225932965}
@@ -309,6 +309,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e48e77181f996c8428633b7dbcdaca62, type: 3}
   footstepSource: {fileID: 3806935995324720592}
   footstepInterval: 0.4
+  orbitRadius: 0.5
 --- !u!114 &3259098562182416474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,15 +323,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerGrenadeHandler
   slots:
-  - type: {fileID: 0}
-    count: 0
+  - type: {fileID: 11400000, guid: b104e7451f7425648ad9007deca2bb6a, type: 2}
+    count: 99
   - type: {fileID: 0}
     count: 0
   maxPerSlot: 1000
   grenadePrefab: {fileID: 7960097028484614352, guid: 418cac5f33dbc134cb9e82defc19ca4f,
     type: 3}
-  throwForce: 20
-  upwardBias: 0.5
+  throwForce: 10
+  upwardBias: 0.2
   debugLogs: 1
 --- !u!50 &650706458628743246
 Rigidbody2D:
